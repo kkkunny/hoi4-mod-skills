@@ -1,6 +1,6 @@
 ---
 name: hoi4-character
-description: Create characters (country leaders, advisors, unit leaders) in HOI4. Covers character definitions, roles, portraits, traits, recruitment, and skill levels.
+description: Create country leaders, advisors, generals, and admirals in HOI4 mods. Use this skill whenever the user wants to add new characters, set up character portraits, assign leader traits, recruit unit commanders, or configure advisor roles and bonuses.
 ---
 
 # HOI4 Character Modding

@@ -1,6 +1,6 @@
 ---
 name: hoi4-onaction
-description: Use on actions (game event hooks) in HOI4. Covers on_startup, on_monthly, on_war, and other hooks for triggering effects automatically.
+description: Set up game event hooks (on actions) in HOI4 mods. Use this skill whenever the user wants to run effects automatically on game start, monthly, or when wars start, factions join, governments change, states transfer, or any other game event moment.
 ---
 
 # HOI4 On Actions

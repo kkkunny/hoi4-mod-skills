@@ -1,6 +1,6 @@
 ---
 name: hoi4-idea
-description: Create national spirits, laws, designers, and hidden ideas in HOI4. Covers idea categories, modifiers, localisation, pictures/sprites, and timed ideas.
+description: Create national spirits, laws, designers, and ideas in HOI4 mods. Use this skill whenever the user wants to add national spirits, political advisors, design companies, military theorists, timed ideas, or hidden ideas. Covers idea categories, modifiers, and sprites.
 ---
 
 # HOI4 Idea Modding

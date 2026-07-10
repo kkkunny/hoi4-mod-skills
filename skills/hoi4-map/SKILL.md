@@ -1,6 +1,6 @@
 ---
 name: hoi4-map
-description: Modify the HOI4 map and states — provinces, terrain, BMP files, state history, population, resources, buildings, and victory points.
+description: Modify the HOI4 map — provinces, terrain, states, resources, buildings, and victory points. Use this skill whenever the user wants to edit state ownership, add resources to states, change province terrain, modify the heightmap or rivers, add buildings to states, or restructure strategic regions.
 ---
 
 # HOI4 Map & State Modding

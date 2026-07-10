@@ -1,6 +1,6 @@
 ---
 name: hoi4-focus
-description: Create or modify national focus trees in HOI4. Covers focus tree setup, focus definitions, shared/joint focuses, continuous focuses, AI strategy plans, dynamic icons, prerequisites, and mutual exclusivity.
+description: Create or modify national focus trees in HOI4 mods. Use this skill whenever the user wants to build a focus tree, add focuses, set up focus branches, create shared or joint focuses, configure continuous focuses, or design AI focus selection. Covers focus icons, prerequisites, mutual exclusivity, and AI strategy plans.
 ---
 
 # HOI4 National Focus Modding

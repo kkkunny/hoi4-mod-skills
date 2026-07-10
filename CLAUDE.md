@@ -17,7 +17,7 @@ hoi4-mod-skills/
 ├── docs/                  # Original reference docs (49 .md files from HOI4 wiki)
 ├── skills/                # Skill definitions (one directory per skill)
 │   ├── hoi4-mod/          # Master skill + references/
-│   │   ├── hoi4-mod.md
+│   │   ├── SKILL.md
 │   │   └── references/    # 49 unabridged reference files
 │   ├── hoi4-script/       # effects + triggers + scopes (merged)
 │   ├── hoi4-tech/         # tech + division + unit + equipment (merged)

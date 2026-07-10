@@ -1,6 +1,6 @@
 ---
 name: hoi4-bookmark
-description: Create or modify start date bookmarks and country selection screen in HOI4. Covers bookmark definitions, country assignments, and start date setup.
+description: Create or modify start date bookmarks and country selection screens in HOI4 mods. Use this skill whenever the user wants to add new starting dates, set up which countries appear on the selection screen, or configure country positions on the bookmark map.
 ---
 
 # HOI4 Bookmark Modding

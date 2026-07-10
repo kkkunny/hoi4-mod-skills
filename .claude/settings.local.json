@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(skill-creator)",
+      "Bash(cd *)",
+      "Bash(sort -t/ -k3)"
+    ]
+  }
+}

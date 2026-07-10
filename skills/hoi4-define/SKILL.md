@@ -1,6 +1,6 @@
 ---
 name: hoi4-define
-description: Modify game defines (constants) in HOI4. Covers the define override system, commonly modified defines, and how to avoid conflicts.
+description: Modify game constants and defines in HOI4 mods. Use this skill whenever the user wants to change hardcoded values like focus timing, division size limits, research slots, political power costs, or any other global game setting.
 ---
 
 # HOI4 Defines Modding

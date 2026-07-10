@@ -1,6 +1,6 @@
 ---
 name: hoi4-mod
-description: Master skill for Hearts of Iron IV mod creation. Covers mod structure, game directory layout, and modding workflow. Also serves as an index to specialized sub-skills.
+description: Master skill for Hearts of Iron IV mod creation. Use this skill whenever the user wants to create a new HOI4 mod, understand mod structure and file layout, figure out which game files to modify, or learn the modding workflow. Also serves as an index of all specialized sub-skills — use this first, then follow [[double-bracket links]] to the relevant sub-skill for detailed implementation.
 ---
 
 # Hearts of Iron IV Modding - Master Skill

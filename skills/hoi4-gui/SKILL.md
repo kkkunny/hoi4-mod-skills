@@ -1,6 +1,6 @@
 ---
 name: hoi4-gui
-description: Create and modify the Hearts of Iron IV user interface — sprites, .gfx files, .gui layout files, animations, and scripted GUI elements.
+description: Create and modify the HOI4 user interface — sprites, graphics, GUI layout files, animations, and scripted GUI elements. Use this skill whenever the user wants to add images to the game, set up focus icons, create custom UI windows, add animated sprites, modify the tech tree view, or build scripted GUIs with buttons and dynamic text.
 ---
 
 # HOI4 GUI & Graphics Modding

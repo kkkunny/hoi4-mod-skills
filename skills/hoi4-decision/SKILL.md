@@ -1,6 +1,6 @@
 ---
 name: hoi4-decision
-description: Create decisions, missions, and decision categories in HOI4. Covers category definitions, triggers (allowed/visible/available/potential), cost, effects, AI will do, and targeted decisions.
+description: Create decisions, missions, and decision categories in HOI4 mods. Use this skill whenever the user wants to add clickable decisions, mission objectives, targeted state decisions, or organize decisions into categories in the decision tab.
 ---
 
 # HOI4 Decision Modding

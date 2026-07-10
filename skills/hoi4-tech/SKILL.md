@@ -1,6 +1,6 @@
 ---
 name: hoi4-tech
-description: Create or modify the military-technical side of HOI4 — technologies, doctrines, division templates, orders of battle, sub-units, and equipment types with modules and variants.
+description: Create or modify technologies, doctrines, division templates, orders of battle, sub-units, and equipment in HOI4 mods. Use this skill whenever the user wants to add tech trees, set up starting OOBs and military units, define division templates, create equipment types, or set up module-based equipment for ships/tanks/planes.
 ---
 
 # HOI4 Technology & Military Modding

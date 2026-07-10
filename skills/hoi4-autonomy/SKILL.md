@@ -1,6 +1,6 @@
 ---
 name: hoi4-autonomy
-description: Create or modify autonomy states (puppet levels) in HOI4. Covers autonomy definitions, puppet types, autonomy effects, and autonomy-dependent country naming.
+description: Create or modify autonomy states and puppet levels in HOI4 mods. Use this skill whenever the user wants to add new puppet types, change what overlords or subjects can do, modify autonomy effects, or set up country names based on autonomy levels.
 ---
 
 # HOI4 Autonomy State Modding

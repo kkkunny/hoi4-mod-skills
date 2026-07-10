@@ -1,6 +1,6 @@
 ---
 name: hoi4-ideology
-description: Create or modify ideologies and sub-ideologies in HOI4. Covers ideology groups, ideology types, party names, colors, and government assignment.
+description: Create or modify ideologies and sub-ideologies in HOI4 mods. Use this skill whenever the user wants to add new ideology types, change ideology colors, set diplomatic rules between ideologies, or configure party names and government types.
 ---
 
 # HOI4 Ideology Modding

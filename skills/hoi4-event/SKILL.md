@@ -1,6 +1,6 @@
 ---
 name: hoi4-event
-description: Create and fire events in HOI4. Covers country events, news events, state events, namespace setup, localisation, pictures, triggers, options, and hidden events.
+description: Create and fire events in HOI4 mods. Use this skill whenever the user wants to add country events, news popups, hidden events, event chains, or trigger events from focuses, decisions, or on_actions. Covers MTTH, event options, pictures, and AI chance.
 ---
 
 # HOI4 Event Modding

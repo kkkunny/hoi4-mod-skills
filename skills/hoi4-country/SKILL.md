@@ -1,6 +1,6 @@
 ---
 name: hoi4-country
-description: Create or modify countries in HOI4. Covers country tags, country files, history files, flags, localisation, starting characters, order of battle, and placing countries on the map.
+description: Create or modify countries in HOI4 mods. Use this skill whenever the user wants to add a new nation, set up a country's starting territory, politics, military, or technology, assign a country to the map, or create country flags and colors.
 ---
 
 # HOI4 Country Creation

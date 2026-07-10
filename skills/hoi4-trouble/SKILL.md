@@ -1,6 +1,6 @@
 ---
 name: hoi4-trouble
-description: Debug and troubleshoot HOI4 mods. Covers error log analysis, common crash causes, encoding issues, and debugging techniques.
+description: Debug and troubleshoot HOI4 mod crashes, errors, and broken content. Use this skill whenever the user encounters crashes, errors in error.log, missing content, broken focus trees, or any mod behavior that isn't working as expected.
 ---
 
 # HOI4 Troubleshooting

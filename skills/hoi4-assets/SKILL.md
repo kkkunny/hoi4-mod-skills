@@ -1,6 +1,6 @@
 ---
 name: hoi4-assets
-description: Manage text, graphics directories, music, and sound assets in HOI4 mods. Covers localisation (text), gfx directory structure overview, and audio files.
+description: Add or modify game text, localisation, and audio in HOI4 mods. Use this skill whenever the user wants to add names, descriptions, tooltips, or translations for countries, focuses, events, ideas, decisions, or any other game content. Also covers music and sound files.
 ---
 
 # HOI4 Assets: Localisation, Graphics & Audio
@@ -200,5 +200,5 @@ For graphical assets, the `gfx/` directory mirrors the game's directory structur
 Images alone are not enough — each needs a `spriteType` defined in `interface/*.gfx`. For detailed sprite and GUI modding, see [[hoi4-gui]].
 
 For music and sound:
-- `music/` — Music files referenced by `music/` folder or modded via `Music modding.md`
-- `sound/` — Sound effects, modded via `Sound modding.md`
+- `music/` — Music files referenced by `music/` folder or modded via the Music modding reference
+- `sound/` — Sound effects, modded via the Sound modding reference

@@ -1,6 +1,6 @@
 ---
 name: hoi4-modifier
-description: Create and apply modifiers in HOI4. Covers static modifiers, dynamic modifiers, global modifiers, national modifiers, and how to apply modifiers through ideas, traits, and other systems.
+description: Create and apply modifiers in HOI4 mods. Use this skill whenever the user wants to add stat bonuses or penalties, create dynamic modifiers with variable values, set up ideas that give continuous effects, or understand which modifier keys exist for each scope type.
 ---
 
 # HOI4 Modifier Reference

@@ -1,6 +1,6 @@
 ---
 name: hoi4-script
-description: Reference for HOI4's scripting language core — effects (commands), triggers (conditions), and scopes. Use when writing any effect blocks, trigger conditions, or scope navigation.
+description: Reference for HOI4's scripting language — effects (commands), triggers (conditions), and scope navigation. Use this skill whenever writing any effect blocks, trigger conditions, or scope chains in focuses, events, decisions, or any other HOI4 mod files. Covers PREV workaround, every/random/any/all pattern, flow control, and common pitfalls.
 ---
 
 # HOI4 Script Language Reference

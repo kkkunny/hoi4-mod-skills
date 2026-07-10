@@ -1,6 +1,6 @@
 ---
 name: hoi4-ai
-description: Configure AI behavior in HOI4. Covers AI strategy plans, AI focuses, AI will do (MTTH blocks), and AI personality settings.
+description: Configure AI behavior in Hearts of Iron IV mods. Use this skill whenever the user wants to make the AI follow specific focus orders, prioritize decisions, build division templates, or behave historically. Covers AI strategy plans, ai_will_do blocks, AI focuses, AI templates, and AI personalities.
 ---
 
 # HOI4 AI Modding
