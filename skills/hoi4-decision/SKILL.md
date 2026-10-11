@@ -5,181 +5,64 @@ description: Create decisions, missions, and decision categories in HOI4 mods. U
 
 # HOI4 Decision Modding
 
-This skill covers creating decisions, missions, and decision categories in Hearts of Iron IV.
+Covers decision categories, decisions, missions, and targeted decisions.
 
-## Decision Categories
+## File Locations
 
-Location: `<mod>/common/decisions/categories/*.txt`
+- Categories: `common/decisions/categories/*.txt`
+- Decisions: `common/decisions/*.txt`
+- Icons: `interface/*.gfx` → [[hoi4-gui]]; text keys → [[hoi4-assets]]
 
-Minimal category:
-```
-my_decision_category = {
-}
-```
-
-Category with full options:
-```
-my_decision_category = {
-    name = my_category_name         # Localisation override (optional)
-    desc = my_category_desc         # Description override (optional)
-    picture = GFX_my_category_icon  # Icon override (optional)
-    allowed = { tag = BHR }        # Checked ONCE at game start
-    visible = { is_subject = no }  # Checked continuously
-    
-    days_remove = 30               # Days before decisions reappear after removal
-    days_re_enable = 90            # Days before category can be opened again
-    
-    collapse = yes                 # Category starts collapsed in UI
-    priority = 100                 # Sort order (higher = first)
-}
-```
-
-## Decision Definition
-
-Location: `<mod>/common/decisions/*.txt`
+## Minimal Decision
 
 ```
 my_decision_category = {
     my_decision = {
         icon = GFX_my_decision_icon
         
-        allowed = { original_tag = BHR }      # Checked ONCE at start
-        visible = { is_subject = no }         # Checked continuously
-        available = { has_stability > 0.5 }   # Checked continuously (can be taken)
+        allowed = { original_tag = SCO }        # checked ONCE at game load
+        visible = { is_subject = no }           # checked continuously
+        available = { has_stability > 0.5 }     # checked continuously — clickable condition
         
-        cost = 100                             # Political power cost
-        days_remove = 30                       # Days before decision reappears
-        days_re_enable = 0                     # Cooldown after taking
-        fire_only_once = no                    # Can be taken only once
+        cost = 100                              # political power; must be an integer
+        days_remove = 30                        # days before it reappears
+        fire_only_once = no
         
-        ai_will_do = {
-            base = 1
-            modifier = {
-                factor = 2
-                has_war = yes
-            }
-        }
-        
-        activation = {                         # For missions: triggers display
-            has_war = yes
-        }
-        
-        available = {
-            has_completed_focus = TAG_my_focus
-        }
-        
-        remove_effect = { ... }                # Effect when removed from list
-        cancel_trigger = { NOT = { ... } }     # When to automatically cancel
-        cancel_effect = { ... }                # Effect when cancelled
-        
-        on_map_mode = yes                      # Show highlights on map
-        state_target = yes                     # Show state selection highlights
-        
-        complete_effect = {
-            add_political_power = -100
-            add_stability = 0.05
-        }
+        complete_effect = { add_stability = 0.05 }
     }
 }
 ```
 
-## Triggers Detailed
+Categories accept `allowed`, `visible`, `days_remove`/`days_re_enable`, `collapse`, `priority`, and optional `name`/`desc`/`picture` overrides.
 
-| Trigger | When Checked | Purpose |
+## Trigger Reference
+
+| Trigger | When checked | Purpose |
 |---|---|---|
-| `allowed` | Only at game load | DLC/identity checks; restrict to country |
-| `visible` | Continuously (if allowed met) | Whether decision appears in list |
-| `available` | Continuously | Whether decision can be taken |
-| `potential` | Only at game load | Same as allowed, alternate name |
-| `activation` | Continuously | For missions: shows goal (doesn't enable) |
-| `cancel_trigger` | Continuously | When met, cancels decision |
+| `allowed` / `potential` | once at load | restrict to country, DLC/identity checks |
+| `visible` | continuously | appears in the decision list |
+| `available` | continuously | can actually be taken right now |
+| `activation` | continuously | missions: shows the goal, cannot be clicked |
+| `cancel_trigger` | continuously | auto-cancel; runs `cancel_effect` |
+| `remove_effect` | settlement | effect when removed from the list |
 
-### For Targeted Decisions (targeting a state)
-```
-target_trigger = {
-    is_on_continent = europe
-    OWNER = { has_government = democratic }
-}
-```
-`FROM` = the target, `ROOT` = the decision-taker. `target_trigger` only checks when a state is hovered, for performance.
+Both `visible` and `available` must be true for a decision to be clickable.
 
-### Tips
-- Put country/DLC checks in `allowed` (not `visible`) for performance
-- `visible` does nothing for missions
-- `available` + `visible` both must be true for the decision to be clickable
+## Missions and Targets
 
-## Missions
+- **Missions** = decisions with `activation`, shown with a completion bar; `visible` does nothing for them.
+- **Targeted decisions** add `target_trigger` + `state_target = yes` / `on_map_mode = yes`. Inside `target_trigger`: `FROM` = target, `ROOT` = decision-taker; only checked while a state is hovered (performance).
+- `ai_will_do` weights AI picking: `base`, `factor`, `add`.
 
-Missions are decisions with `activation` — they show a progress/goal but can't be clicked:
-```
-my_mission = {
-    activation = { has_war = yes }
-    visible = { tag = BHR }
-    complete_effect = { add_stability = 0.1 }
-}
-```
-Missions appear with a completion bar. The `activation` trigger determines if the mission goal is shown.
+## Fatal Pitfalls
 
-## Targeted Decisions
-
-Decisions that target a specific state on the map:
-```
-my_targeted_decision = {
-    target_trigger = {
-        controller = { tag = ROOT }
-        FROM = { is_owned_by = ROOT }
-    }
-    allowed = { original_tag = BHR }
-    state_target = yes
-    on_map_mode = yes
-    
-    complete_effect = {
-        add_building_construction = {
-            type = arms_factory
-            level = 1
-        }
-    }
-}
-```
-
-## AI Will Do
-
-```
-ai_will_do = {
-    base = 1
-    modifier = {
-        factor = 3
-        has_war = yes
-    }
-    modifier = {
-        add = 5
-        num_of_factories > 50
-    }
-}
-```
-- `base`: starting value
-- `factor`: multiply
-- `add`: add
-
-## Localisation
-
-In `<mod>/localisation/english/*_l_english.yml` (UTF-8-BOM):
-```
-l_english:
- my_decision_category: "My Category"
- my_decision_category_desc: "Category description."
- my_decision: "My Decision"
- my_decision_desc: "Decision description."
-```
-
-## Common Pitfalls
-
-- **allowed vs visible**: `allowed` checks only once at load — misleading if used for dynamic conditions
-- **Missions ignore visible**: use `activation` instead for mission display
-- **Cost must be numeric**: PP, command power, etc. must be integer
+- **`allowed` used for dynamic conditions** → checks once at load, never updates
+- **`visible` used to gate missions** → ignored; use `activation`
+- **Non-numeric cost** → decision fails to load
 
 ## References
 
-This skill covers the essentials. For the complete, unabridged reference with exhaustive details, read the following file(s) under the master skill's references directory:
+Full details in the [[hoi4-mod]] skill's `references/` folder:
 
-- `skills/hoi4-mod/references/Decision modding.md` — Full reference for decision categories, triggers, costs, effects, and targeted decisions.
+- `Decision modding.md` — all category/decision arguments, costs, cooldowns, targeted decision scopes
+- [[hoi4-script]] — `complete_effect` / trigger syntax; [[hoi4-ai]] — AI weighting context

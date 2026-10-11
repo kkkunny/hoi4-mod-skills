@@ -5,135 +5,49 @@ description: Create or modify ideologies and sub-ideologies in HOI4 mods. Use th
 
 # HOI4 Ideology Modding
 
-This skill covers creating and modifying ideology groups and types.
+Covers ideology groups, sub-ideology types, and their rules.
 
-## Ideology File Location
+## File Location
 
-`<mod>/common/ideologies/*.txt`
+`common/ideologies/*.txt`. Four default groups: `democratic`, `fascism`, `communism`, `neutrality`.
 
-## Ideology Groups (Top-Level Categories)
-
-The four default groups: `democratic`, `fascism`, `communism`, `neutrality`.
-
-### Sub-Ideologies
+## Minimal Sub-Ideology
 
 ```
 ideas = {
-    communism = {
-        stalinism = {
+    communism = {                     # ideology GROUP
+        stalinism = {                 # ideology TYPE
             color = { 255 0 0 }
             can_declare_war_on_same_ideology = yes
             puppet_cost_factor = -0.3
-            can_boost_other_ideologies = yes
-            min_surrender_limit = -0.1
             
             rules = {
                 faction_invite_same_ideology = yes
                 join_faction_same_ideology = yes
             }
         }
-        
-        leninism = {
-            color = { 200 50 50 }
-            # modifiers
-            rules = { ... }
-        }
-    }
-    
-    democratic = {
-        liberalism = {
-            color = { 50 50 255 }
-            can_send_volunteers = no
-        }
     }
 }
 ```
 
-## Sub-Ideology Arguments
+## Key Rules
 
-| Argument | Type | Description |
-|---|---|---|
-| `color` | RGB | UI color for the ideology |
-| `can_declare_war_on_same_ideology` | bool | Can declare war on same ideology |
-| `can_boost_other_ideologies` | bool | Can use ideology boosting |
-| `can_send_volunteers` | bool | Can send volunteers |
-| `can_puppet` | bool | Allowed to puppet countries |
-| `can_join_factions` | bool | Can join/create factions |
-| `can_host_exiles` | bool | Can host governments-in-exile |
-| `can_use_kamikaze` | bool | Can use kamikaze strikes |
-| `puppet_cost_factor` | float | Puppet cost multiplier |
-| `min_surrender_limit` | float | Surrender progress modifier |
-| `ai_faction_member_desire` | float | AI willingness to join factions |
-| `ai_volunteer_desire` | float | AI willingness to send volunteers |
+- **Type vs group**: `set_politics = { ruling_party = communism }` takes a **group**; `country_leader = { ideology = stalinism }` takes a **type**. Mixing them up breaks leaders and politics.
+- Common type arguments: `color`, `can_declare_war_on_same_ideology`, `can_boost_other_ideologies`, `can_send_volunteers`, `can_puppet`, `can_join_factions`, `can_host_exiles`, `puppet_cost_factor`, `min_surrender_limit`, `ai_faction_member_desire` — full list in `Ideology modding.md`.
+- `rules = { ... }` controls same-ideology interactions: faction invite/join, puppet, guarantee, lend-lease, military access.
+- `dynamic_ideology = yes` enables runtime-defined ideology types.
+- Popularities must sum to exactly 100 in `set_popularities`, or nothing is set.
+- Localisation: `ideology_group`, `ideology_group_desc`, sub-ideology names; party names per country `TAG_ideology_party` / `TAG_ideology_party_long` → [[hoi4-assets]].
 
-### Rules Sub-Block
+## Fatal Pitfalls
 
-```
-rules = {
-    faction_invite_same_ideology = yes
-    join_faction_same_ideology = yes
-    puppet_same_ideology = yes
-    guarantee_same_ideology = yes
-    lend_lease_same_ideology = yes
-    military_access_same_ideology = yes
-}
-```
-
-## Dynamic Ideologies
-
-```
-dynamic_ideology = yes
-```
-
-Allows dynamic ideology types defined at runtime (used by some mods for custom governments).
-
-## Character Leader Ideology
-
-In character definitions, the `ideology` field must reference an ideology **type** (sub-ideology), not a group:
-
-```
-country_leader = {
-    ideology = stalinism        # Correct — a type under 'communism' group
-    # NOT: ideology = communism  # Wrong — this is a group, not a type
-}
-```
-
-## Changing Ideology via Effect
-
-```
-set_politics = {
-    ruling_party = communism
-}
-set_popularities = {
-    democratic = 10
-    communism = 80
-    fascism = 10
-}
-```
-
-Party popularities must add up to exactly 100.
-
-## Localisation
-
-```
-l_english:
- communism: "Communism"
- communism_desc: "Description"
- stalinism: "Stalinism"
- stalinism_desc: "Stalinism description"
- 
- SCO_communism_party: "SCP"
- SCO_communism_party_long: "Scottish Communist Party"
-```
-
-## Common Pitfalls
-
-- **Sub-ideology vs group**: `set_politics.ruling_party` takes an ideology group; `country_leader.ideology` takes a sub-ideology type
-- **Popularities must sum to 100**: otherwise they fail to set
-- **Missing sub-ideology**: characters with an undefined ideology type won't function properly
+- **Group used where a type is required** (leader `ideology`, type-specific triggers) → character/government fails
+- **Popularities not summing to 100** → `set_popularities` silently fails
+- **Character referencing an undefined type** → character won't function
 
 ## References
 
-This skill covers the essentials. For the complete, unabridged reference with exhaustive details, read the following file(s) under the master skill's references directory:
+Full details in the [[hoi4-mod]] skill's `references/` folder:
 
-- `skills/hoi4-mod/references/Ideology modding.md` — Full reference for ideology groups, types, party names, colors, and government assignment.
+- `Ideology modding.md` — all type arguments, rules, dynamic ideologies, party/government setup
+- [[hoi4-country]] — country starting politics; [[hoi4-character]] — leader ideology; [[hoi4-assets]] — party/ideology localisation

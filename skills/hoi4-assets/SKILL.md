@@ -3,202 +3,59 @@ name: hoi4-assets
 description: Add or modify game text, localisation, and audio in HOI4 mods. Use this skill whenever the user wants to add names, descriptions, tooltips, or translations for countries, focuses, events, ideas, decisions, or any other game content. Also covers music and sound files.
 ---
 
-# HOI4 Assets: Localisation, Graphics & Audio
+# HOI4 Localisation, Graphics & Audio
 
-This skill covers managing game assets — text (localisation), the gfx directory structure, music, and sound. For detailed sprite and GUI modding, see [[hoi4-gui]].
+Covers game text (localisation), the `gfx/` layout, music, and sound. Sprites/GUI details → [[hoi4-gui]].
 
----
+## Localisation
 
-## Part 1: Localisation (Text)
-
-This section covers adding and modifying text in Hearts of Iron IV through the localisation system.
-
-## Quick Checklist
-
-1. Create a `.yml` file in `<mod>/localisation/english/` for English
-2. Filename must contain the language code: `filename_l_english.yml` (lowercase L, not uppercase i)
-3. **File must be UTF-8 with BOM** encoding
-4. First line must be `l_english:` (with colon)
-5. Each entry: `localisation_key:0 "Text value"`
-
-## Supported Languages
-
-| Language | Code | Folder |
-|---|---|---|
-| English | `l_english` | `localisation/english/` |
-| French | `l_french` | `localisation/french/` |
-| German | `l_german` | `localisation/german/` |
-| Spanish | `l_spanish` | `localisation/spanish/` |
-| Brazilian Portuguese | `l_braz_por` | `localisation/braz_por/` |
-| Polish | `l_polish` | `localisation/polish/` |
-| Russian | `l_russian` | `localisation/russian/` |
-| Japanese | `l_japanese` | `localisation/japanese/` |
-| Simplified Chinese | `l_simp_chinese` | `localisation/simp_chinese/` |
-| Korean | `l_korean` | `localisation/korean/` |
-
-## Basic File Format
+`localisation/<language>/*_l_english.yml` — filename **must** contain the language code. **UTF-8 with BOM**, first line `l_english:`, one entry per line:
 
 ```
 l_english:
- my_key: "Localised text here"
- my_key_desc: "Description text"
+ my_key: "Text value"
+ my_key_desc: "Description"
 ```
 
-### Rules
-- **UTF-8 with BOM** is mandatory
-- Localisation keys: ASCII only (English letters, underscores, dots, hyphens, numbers)
-- Version number (`:0`) is optional and ignored by the game
-- Values must be enclosed in straight double quotes `"`
-- Values must be on a single line
-- Special characters or spaces in keys break the rest of the file
-- Multiple language databases can be in one file (filename must contain all language codes)
-
-## Key Types by Game Object
-
-| Object | Key Format | Description Key Format |
-|---|---|---|
-| Country name | `TAG` | `TAG_DEF`, `TAG_ADJ` |
-| Country ideology name | `TAG_ideology` | `TAG_ideology_DEF` |
-| Party name | `TAG_ideology_party` | `TAG_ideology_party_long` |
-| Focus name/desc | `focus_id` | `focus_id_desc` |
-| Event title/desc | `event_id.t` / `event_id.d` | N/A |
-| Event option | `event_id.a` | N/A |
-| Idea name/desc | `idea_id` | `idea_id_desc` |
-| Decision name/desc | `decision_id` | `decision_id_desc` |
-| State name | `STATE_123` | N/A |
-| Victory point | `VICTORY_POINTS_1234` | N/A |
-| Character name/desc | `character_id` | `character_id_desc` |
-| Equipment name | `equipment_type` | `equipment_type_short` |
-| Country-specific equipment | `TAG_equipment_type` | `TAG_equipment_type_short` |
-
-## Formatting Codes
-
-### Colors
-```
-§RRed text§! §GGreen text§! §BBlue text§! §YYellow text§!
-§WWhite text§! §DDark text§! §GGreen text§! §bBlack text§!
-§gGrey text§! §MMagenta text§! §CCyan text§! §OLight orange§!
-§HHighlight (yellow)§!
-```
-
-### Other Formatting
-```
-\n    Newline
-\"    Quotation mark inside text
-§%    Start of text region
-§!    End of formatting
-```
-
-## Dynamic Values
-
-```
-"Political Power: £pol_power£"
-"£political_power_gain£ Political Power per day"
-```
-
-Square brackets for commands:
-```
-"[Root.GetName]"           — Country name
-"[From.GetNameDef]"        — Country name with "the"
-"[Root.GetRulingIdeology]" — Ruling ideology name
-```
-
-## Replacing Vanilla Text (The replace/ Folder)
-
-To override specific vanilla localisation without copying entire files, create:
-```
-<mod>/localisation/english/replace/mod_replace_l_english.yml
-```
-
-```
-l_english:
- POLITICS_ADD_POLITICAL_POWER: "New PP: $VAL|=+0$."
-```
-
-Files in `replace/` folder take priority. This avoids needing to copy and maintain entire base game files.
-
-## Duplicate Keys
-
-Duplicates across files are logged in `.../Hearts of Iron IV/logs/text.log`. The chosen value isn't consistently predictable — avoid duplicates.
-
-## Country Name Priority Chain
-
-```
-SCO_IRE_democratic_autonomy_integrated_puppet  # Most specific
-  ↓
-SCO_autonomy_dominion                           # Autonomy type
-  ↓
-SCO_IRE_subject                                 # Subject of specific country
-  ↓
-SCO_subject                                     # Any subject
-  ↓
-SCO_liberalism                                  # Sub-ideology type
-  ↓
-SCO_democratic                                  # Ideology group
-  ↓
-SCO                                             # Generic name
-  ↓
-COUNTRY_SCO_autonomy_dominion                   # Generic with specific
-```
-
-## Subject Name Variables
-
-Available in country names:
-- `$NONIDEOLOGY$`, `$NONIDEOLOGYADJ$`, `$NONIDEOLOGYDEF$`
-- `$OVERLORD$`, `$OVERLORDADJ$`, `$OVERLORDNAMEDEF$`
+- Language codes: `english`, `french`, `german`, `spanish`, `braz_por`, `polish`, `russian`, `japanese`, `simp_chinese`, `korean`.
+- Keys are ASCII only (letters, digits, `_ . -`); values on a single line in straight quotes; use `\n` for newlines, `\"` for quotes.
+- **Override vanilla text without copying files**: put replacement keys in `localisation/<language>/replace/*.yml` — the `replace/` folder takes priority.
+- Common key patterns: `TAG` / `TAG_DEF` / `TAG_ADJ` (countries), `idea_id` / `idea_id_desc`, `focus_id` / `focus_id_desc`, `decision_id` / `decision_id_desc`, `event_id.t` / `.desc` / `.a`, `STATE_n`, `VICTORY_POINTS_n`, `character_id[_desc]`. Full table → `Localisation.md`.
+- Formatting: color codes `§R...§!`, dynamic commands `[Root.GetName]` → full list in `Localisation.md`.
+- Country name priority chain (autonomy > subject > ideology > TAG) → `Country creation.md`.
+- Duplicate keys are logged in `logs/text.log`; which value wins is unpredictable — avoid duplicates.
 
 ## Scripted Localisation
 
-Location: `<mod>/common/scripted_localisation/*.txt`
+`common/scripted_localisation/*.txt` — text that changes with game state, used as `[ROOT.my_text]`:
 
 ```
 defined_text = {
     name = my_text
-    text = {
-        trigger = { has_government = democratic }
-        localization_key = loc_demo
-    }
-    text = {
-        trigger = { has_government = fascism }
-        localization_key = loc_fasc
-    }
-    text = {
-        localization_key = loc_default     # Always true, fallback
-    }
+    text = { trigger = { has_government = democratic } localization_key = loc_demo }
+    text = { localization_key = loc_default }     # no trigger = fallback
 }
 ```
 
-Usage: `[ROOT.my_text]`
+## Graphics & Audio
 
-## Common Pitfalls
+- `gfx/` mirrors the game's structure: `flags/`, `interface/` (icons), `leaders/`, `event_pictures/`, `fonts/`. **Every image needs a spriteType** in `interface/*.gfx` → [[hoi4-gui]].
+- `music/` — music tracks and playlists → `Music modding.md`.
+- `sound/` — sound effects (`.ogg`), registered in `.asset` files → `Sound modding.md`.
+- 3D world models: `Entity modding.md`; visual effects: `Particle modding.md`, `Posteffect modding.md`.
 
-- **Wrong encoding** is the #1 cause of broken localisation files
-- **Missing first line** (`l_english:`): all entries get assigned to no database
-- **Localisation keys with special chars or spaces**: breaks the rest of the file
-- **Multi-line values**: must use `\n` instead; actual newlines break the file
-- **Filename doesn't contain `_l_english`**: file won't be loaded
-- **Missing Unicode characters in fonts**: characters appear as `?` if the font lacks them
+## Fatal Pitfalls
+
+- **Wrong encoding** — the #1 cause of broken localisation (must be UTF-8 **with** BOM)
+- **Missing `l_english:` first line** → all entries land in no database
+- **Filename without the language code** → file not loaded at all
+- **Special characters/spaces in keys, missing closing quote, raw newlines** → rest of the file breaks
 
 ## References
 
-This skill covers the essentials. For the complete, unabridged reference with exhaustive details, read the following file(s) under the master skill's references directory:
+Full details in the [[hoi4-mod]] skill's `references/` folder:
 
-- `skills/hoi4-mod/references/Localisation.md` — Full reference for YAML format, encoding, color codes, and supported languages
-
-## gfx/ Directory Overview
-
-For graphical assets, the `gfx/` directory mirrors the game's directory structure and contains:
-
-| Path | Content |
-|---|---|
-| `gfx/flags/` | Country flags in TGA format (82x52, 41x26, 10x7) |
-| `gfx/interface/` | UI icons, focus icons, idea pictures, event pictures |
-| `gfx/leaders/` | Character/leader portraits |
-| `gfx/event_pictures/` | Event background images |
-| `gfx/fonts/` | Bitmap font files |
-
-Images alone are not enough — each needs a `spriteType` defined in `interface/*.gfx`. For detailed sprite and GUI modding, see [[hoi4-gui]].
-
-For music and sound:
-- `music/` — Music files referenced by `music/` folder or modded via the Music modding reference
-- `sound/` — Sound effects, modded via the Sound modding reference
+- `Localisation.md` — full YAML format, colors, commands, languages
+- `Music modding.md`, `Sound modding.md` — audio pipeline
+- `Entity modding.md`, `Particle modding.md`, `Posteffect modding.md` — 3D/visual assets
+- [[hoi4-gui]] — sprites and GUI

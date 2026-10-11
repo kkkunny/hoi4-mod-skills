@@ -5,167 +5,53 @@ description: Configure AI behavior in Hearts of Iron IV mods. Use this skill whe
 
 # HOI4 AI Modding
 
-This skill covers configuring AI behavior: strategy plans, focus selection, AI will do blocks, and AI templates.
+Covers AI strategy plans (focus orders), `ai_will_do` weighting, AI focuses/templates/personalities.
 
-## AI Strategy Plans
+## Minimal AI Strategy Plan
 
-Location: `<mod>/common/ai_strategy_plans/*.txt`
-
-The primary way to control AI behavior per country:
+`common/ai_strategy_plans/*.txt` — the primary per-country AI control:
 
 ```
-my_ai_plan = {
-    name = "Plan Name"               # Internal name (for aiview command)
-    desc = "Plan description"        # Internal description
-    
-    allowed = {                      # Checked ONCE at game start
-        tag = BHR
+SCO_historical = {
+    name = "Historical plan for SCO"        # internal name, shown by the aiview console command
+    allowed = { tag = SCO }                 # checked ONCE at game start
+    enable = { is_historical_focus_on = yes }   # checked daily
+    abort = { has_war_with = ENG }          # forces plan to stop
+    ai_national_focuses = {                 # exact priority order
+        SCO_industry_1
+        SCO_politics_1
     }
-    
-    enable = {                       # Checked daily; enables the plan
-        is_historical_focus_on = yes
-        has_game_rule = {
-            rule = BHR_ai_behavior
-            option = DEFAULT
-        }
-    }
-    
-    abort = {                        # Forces plan to stop if true
-        has_war = yes
-    }
-    
-    ai_national_focuses = {          # Focuses in exact priority order
-        BHR_industrial_1
-        BHR_industrial_2
-        BHR_political_1
-    }
-    
-    focus_factors = {                # Multiplier on ai_will_do values
-        BHR_bad_focus = 0            # 0 = never pick this
-        BHR_good_focus = 3           # 3x more likely
-    }
-    
-    weight = {                       # Overall plan weight multiplier
-        base = 1
-        modifier = {
-            factor = 2
-            date > 1939.1.1
-        }
+    focus_factors = {                       # ai_will_do multipliers
+        SCO_bad_focus = 0                   # 0 = never pick (unless in ai_national_focuses)
+        SCO_good_focus = 3
     }
 }
 ```
 
-### Key Points
-- Multiple AI strategy plans can be active simultaneously
-- `ai_national_focuses` takes priority over `ai_will_do` when both are set
-- `focus_factors` with value 0 prevents AI from ever picking that focus (unless in `ai_national_focuses`)
-- When a plan's ordered focuses are all impossible, AI falls back to `ai_will_do`
+## Key Rules
 
-### Custom Game Rules Integration
+- Multiple plans can be active; `focus_factors` from all active plans multiply together.
+- `allowed` = once at start; `enable` = daily; `abort` = continuous. Keep `enable` cheap.
+- Ordered focuses stop at the first impossible one; when the list is exhausted the AI falls back to `ai_will_do`.
+- **Game rules**: `has_game_rule = { rule = SCO_ai_behavior option = HISTORICAL }` in `enable`; rules defined in `common/game_rules/*.txt`. Random paths: set a flag in `on_startup` → [[hoi4-onaction]].
+- **`ai_will_do`** (MTTH block, used in focuses/decisions/events): `base` (default 1), `modifier = { factor = N ... }` (multiply), `add = N`; applied in order; variables allowed.
+- Other hook-ups:
+  - `common/ai_focuses/*.txt` — AI focus "strategies"; continuous focuses match them via `supports_ai_strategy = <ai_focus_id>`
+  - `common/ai_templates/*.txt` — division templates the AI builds (`weight`, `target_width`, `template`, `allowed`)
+  - `common/ai_areas/*.txt` — geographic AI planning areas
+  - `common/ai_personalities.txt` — global AI personality modifiers
+  - `common/ai_strategy/*.txt` — low-level AI strategies
+- Full argument lists → `AI focuses.md`.
 
-```
-has_game_rule = {
-    rule = BHR_ai_behavior
-    option = HISTORICAL
-}
-```
+## Fatal Pitfalls
 
-Game rules are defined in `<mod>/common/game_rules/*.txt`.
-
-## AI Will Do (MTTH Blocks)
-
-Used in focuses, decisions, events, and other AI selection contexts:
-
-```
-ai_will_do = {
-    base = 1
-    modifier = {
-        factor = 2
-        has_war = yes
-    }
-    modifier = {
-        add = 5
-        has_completed_focus = TAG_prerequisite_focus
-    }
-}
-```
-
-- `base`: starting value (default 1)
-- `factor`: multiply current value
-- `add`: add to current value
-- Modifiers apply in order
-- Variables are supported inside modifiers
-
-## AI Focuses
-
-Location: `<mod>/common/ai_focuses/*.txt`
-
-Defines overall AI focus priorities:
-```
-AI_focus = {
-    id = ai_focus_war_production
-    name = "War Production"
-    ai_strategies = {
-        war_production_focus = {
-            enable = { has_war = yes }
-            abort = { has_war = no }
-            weight = 10
-        }
-    }
-}
-```
-
-Continuous focuses can match AI strategies with `supports_ai_strategy = ai_focus_id`.
-
-## AI Templates
-
-Location: `<mod>/common/ai_templates/*.txt`
-
-Define what division templates the AI should build:
-```
-my_template = {
-    weight = 100
-    target_width = 20
-    
-    template = {
-        regiments = { ... }
-        support = { ... }
-    }
-    
-    allowed = {
-        has_technology = infantry_weapons_1
-    }
-}
-```
-
-## AI Areas
-
-Location: `<mod>/common/ai_areas/*.txt`
-
-Define geographical areas for AI strategic planning.
-
-## AI Personalities
-
-Location: `<mod>/common/ai_personalities.txt`
-
-Define overall AI personality types:
-```
-my_personality = {
-    modifier = {
-        production_factory_efficiency_gain_factor = 0.1
-    }
-}
-```
-
-## Common Pitfalls
-
-- **allowed/abort**: `allowed` checks only once at start; `abort` checks continuously
-- **Focus order stops at first impossible**: if focus #2 is taken, AI won't skip to #3 if #2 is impossible
-- **AI strategy plans stack**: multiple plans with different `focus_factors` multiply together
-- **enable triggers daily**: avoid expensive computations in enable triggers
+- **`allowed` used for dynamic conditions** → only evaluated at game start
+- **Focus order expectation**: if focus #2 is currently impossible, the AI does not skip ahead — it stalls/falls back
+- **Expensive `enable` triggers** → checked daily for every country with the plan
 
 ## References
 
-This skill covers the essentials. For the complete, unabridged reference with exhaustive details, read the following file(s) under the master skill's references directory:
+Full details in the [[hoi4-mod]] skill's `references/` folder:
 
-- `skills/hoi4-mod/references/AI focuses.md` — AI strategy plans, focus factors, and AI behavior configuration.
+- `AI focuses.md` — strategy plans, focus factors, AI focuses/templates/areas/personalities
+- [[hoi4-focus]] — focus lines and `ai_will_do` on focuses; [[hoi4-onaction]] — startup flags

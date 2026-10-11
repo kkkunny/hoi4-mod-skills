@@ -5,133 +5,50 @@ description: Create or modify start date bookmarks and country selection screens
 
 # HOI4 Bookmark Modding
 
-This skill covers creating and modifying start date bookmarks and the country selection screen.
+Covers start-date bookmarks and the country selection screen.
 
-## Bookmark File Location
+## File Location
 
-`<mod>/common/bookmarks/*.txt`
+`common/bookmarks/*.txt`
 
-## Bookmark Definition
+## Minimal Bookmark
 
 ```
 bookmarks = {
     bookmark = {
-        name = BOOKMARK_1936
+        name = BOOKMARK_1936                # localisation keys → [[hoi4-assets]]
         desc = BOOKMARK_1936_DESC
-        date = 1936.1.1.12
+        date = 1936.1.1.12                  # YYYY.M.D.H
         picture = GFX_select_1936
-        
-        default = yes                              # Default bookmark
+        default = yes                       # default-selected bookmark
         
         selectable_countries = {
-            # Major countries shown in selection screen
-            GER = { position = { x = -325 y = 12 } }
+            GER = { position = { x = -325 y = 12 } }     # px, relative to center
             ENG = { position = { x = -280 y = -70 } }
-            SOV = { position = { x = 200 y = 60 } }
-            USA = { position = { x = -200 y = 150 } }
-            FRA = { position = { x = -260 y = 30 } }
-            ITA = { position = { x = -230 y = 105 } }
-            JAP = { position = { x = 350 y = 40 } }
         }
-        
-        minor_countries = {
-            # Minor countries shown in smaller section
-            BHR = { position = { x = 260 y = -120 } }
-        }
+        minor_countries = { BHR = { position = { x = 260 y = -120 } } }
     }
 }
 ```
 
-### Key Arguments
-- `name`: Localisation key for the bookmark title
-- `desc`: Localisation key for the description
-- `date`: Start date. Format: `YYYY.M.D.H` (year.month.day.hour)
-- `default = yes`: This is the default selected bookmark
-- `picture`: Sprite for the bookmark's background/header image
+## Key Rules
 
-## Country Positions
+- **History date blocks interact**: a block at `1939.1.1 = { ... }` in a country history applies only when the start date is **strictly after** the timestamp — content for the bookmark date itself must be outside the block.
+- Multiple bookmarks: repeat the `bookmark = { ... }` block inside one `bookmarks = { ... }`; only one gets `default = yes`. Vanilla 1936 is date `1936.1.1.12`.
+- **Country selection screen**: countries with their own (non-default) focus tree appear automatically; others only if listed in `minor_countries`/`selectable_countries`. The focus tree must match the country or it won't appear.
+- Country entries accept `difficulty` / `custom_difficulty` blocks.
+- Portraits on the selection screen come from the country's history/gfx; positions are easiest to copy from vanilla. Full options → `Bookmark modding.md`.
 
-The `position = { x y }` values determine where country flags appear on the bookmark screen. These are pixel coordinates relative to the bookmark's center.
+## Fatal Pitfalls
 
-Country entries can have additional settings:
-```
-GER = {
-    position = { x = -325 y = 12 }
-    difficulty = { ... }          # AI difficulty modifiers
-    custom_difficulty = { ... }
-}
-```
-
-## History File Date Setup
-
-The bookmark date interacts with country history date blocks:
-
-```
-# In history/countries/TAG - name.txt
-# This applies to ALL start dates:
-capital = 121
-set_stability = 0.7
-
-# This applies only from 1939.1.1 onwards (strictly after):
-1939.1.1 = {
-    oob = "TAG_1939"
-    set_technology = { nuclear_reactor = 1 }
-}
-```
-
-A date block applies when the start date is **strictly later** than the timestamp.
-
-## Multiple Scenarios
-
-For each bookmark, create history accordingly:
-```
-bookmarks = {
-    bookmark = {
-        name = BOOKMARK_1936
-        date = 1936.1.1.12
-        selectable_countries = { ... }
-        default = yes
-    }
-    
-    bookmark = {
-        name = BOOKMARK_1939
-        date = 1939.9.1.12
-        desc = BOOKMARK_1939_DESC
-        selectable_countries = { ... }
-    }
-}
-```
-
-## Country Selection Screen
-
-The interesting countries shown when selecting a bookmark:
-
-### Default Focus Tree
-Countries with their own focus tree (non-default) appear automatically. Countries using the generic tree appear in the "minor countries" section.
-
-### Setting Up Country to Appear
-1. Create a non-default focus tree with `country = { ... }` that matches the country
-2. Or manually add to `minor_countries` or `selectable_countries` in the bookmark
-
-## Localisation
-
-```
-l_english:
- BOOKMARK_1936: "The Great Depression"
- BOOKMARK_1936_DESC: "Europe is still recovering from the Great War..."
- BOOKMARK_1939: "The Second World War"
- BOOKMARK_1939_DESC: "Germany has invaded Poland..."
-```
-
-## Common Pitfalls
-
-- **Missing localisation**: bookmark won't have a name
-- **date block timing**: content at `1939.1.1` won't apply when bookmark date IS `1939.1.1` (must be strictly after)
-- **Country positions**: hard to get right — use existing positions as reference
-- **Focus tree not matching country**: country won't appear in country selection
+- **Missing localisation** → bookmark shows no name
+- **Date block timing** → content at the bookmark's exact timestamp never applies
+- **Country missing from selection** → no matching non-default focus tree and not listed manually
+- **Wrong picture sprite** → bookmark image missing (sprite must exist in `interface/*.gfx` → [[hoi4-gui]])
 
 ## References
 
-This skill covers the essentials. For the complete, unabridged reference with exhaustive details, read the following file(s) under the master skill's references directory:
+Full details in the [[hoi4-mod]] skill's `references/` folder:
 
-- `skills/hoi4-mod/references/Bookmark modding.md` — Full reference for bookmark definitions, country positions, and start date setup.
+- `Bookmark modding.md` — all bookmark fields, positions, difficulty blocks, history interaction
+- [[hoi4-focus]] — focus trees for selection; [[hoi4-country]] — history date blocks; [[hoi4-assets]] — bookmark text

@@ -5,279 +5,57 @@ description: Create or modify national focus trees in HOI4 mods. Use this skill 
 
 # HOI4 National Focus Modding
 
-This skill covers designing and implementing national focus trees, shared focuses, continuous focuses, and AI strategy plans.
+Covers focus trees, focuses, shared/joint/continuous focuses. AI focus orders are configured in [[hoi4-ai]].
 
-## Focus Tree Definition
+## File Locations
 
-Location: `<mod>/common/national_focus/*.txt`
+| Content | Path |
+|---|---|
+| Focus trees, focuses | `common/national_focus/*.txt` (filename irrelevant) |
+| Continuous focuses | `common/continuous_focus/*.txt` |
+| Focus icon sprites | `interface/*.gfx` → [[hoi4-gui]] |
+
+## Minimal Focus Tree
 
 ```
 focus_tree = {
-    id = BHR_focus_tree
+    id = SCO_focus_tree
+    country = { base = 0 modifier = { add = 10 original_tag = SCO } }   # evaluated once, never refreshed
     
-    country = {
-        base = 0
-        modifier = {
-            add = 10
-            tag = BHR
-        }
-    }
-    
-    default = no
+    default = no                          # exactly one tree in the game must be default = yes
     continuous_focus_position = { x = 50 y = 1000 }
-    initial_show_position = { focus = BHR_first_focus }
-    
-    shared_focus = BHR_shared_branch    # Include shared focuses
-    
-    focus = { ... }
-    focus = { ... }
-}
-```
-
-### Key Arguments
-- `id`: Unique focus tree identifier (mandatory)
-- `country`: MTTH block assigning focus tree to countries (evaluated **once** before game start, never refreshed)
-- `default = yes`: Makes this the fallback tree. **Exactly one** default tree must exist.
-- `reset_on_civilwar`: The revolter always re-evaluates the focus tree. Same tree = keeps completed focuses.
-- `shared_focus`: Loads a shared focus and all its prerequisite-connected shared focuses.
-- `continuous_focus_position`: Pixel position of continuous focus palette.
-
-## National Focus Definition
-
-### Minimal Focus
-```
-focus = {
-    id = TAG_focus_name
-    x = 5
-    y = 0
-    icon = GFX_focus_icon_name
-    cost = 8
-    
-    completion_reward = {
-        add_manpower = 1000
-    }
-}
-```
-
-### Position System
-- `x = 5`, `y = 1`: Absolute position. 1 unit x = 96px, 1 unit y = 130px
-- `relative_position_id = TAG_other_focus`: Position relative to another focus (preferred for branches)
-- `offset = { x = -5 trigger = { has_dlc = "..." } }`: Conditional position adjustments
-
-**Avoid recursion** (circular relative positions) — it causes crashes.
-
-### Prerequisites and Mutual Exclusivity
-```
-prerequisite = { focus = TAG_focus_1 focus = TAG_focus_2 }    # OR: at least one
-prerequisite = { focus = TAG_focus_1 }                          # AND: separate blocks
-prerequisite = { focus = TAG_focus_2 }
-
-mutually_exclusive = { focus = TAG_other_focus }
-```
-
-- Prerequisites must be physically positioned **above** the focus for proper line rendering
-- Use `has_completed_focus` in `available` for complex boolean logic
-- Avoid **duplicate focus IDs** across different trees — breaks prerequisite lines
-
-### Triggers
-```
-available = {                     # Must be met to take the focus
-    stability > 0.1
-    294 = { is_owned_by = QAT }
-}
-
-allow_branch = {                  # Whether the focus is visible (checked on tree load)
-    NOT = { has_completed_focus = TAG_other_branch }
-}
-```
-Use `mark_focus_tree_layout_dirty = yes` to refresh `allow_branch` and `offset`.
-
-```
-bypass = { ... }                  # Bypass conditions
-bypass_if_unavailable = yes       # Auto-bypass when available is false
-available_if_capitulated = yes
-cancel_if_invalid = no            # Focus pauses (doesn't cancel) when available becomes false
-continue_if_invalid = yes
-cancel = { ... }                  # Additional cancel conditions
-historical_ai = { ... }           # Prevent AI from picking in historical mode
-```
-
-### Effects
-```
-completion_reward = { ... }       # Granted on completion (focus NOT yet marked complete inside here!)
-select_effect = { ... }           # Granted on selection (makes focus uncancelable)
-bypass_effect = { ... }           # Granted when bypassed
-complete_tooltip = { ... }        # Custom tooltip (effect block, use with hidden_effect)
-```
-
-### Dynamic Icons
-```
-focus = {
-    icon = {
-        trigger = { has_government = democratic }
-        value = GFX_focus_democratic
-    }
-    icon = {
-        value = GFX_focus_fallback
-    }
-    dynamic = yes
-}
-```
-
-### AI Will Do
-```
-ai_will_do = {
-    base = 5
-    modifier = {
-        factor = 3
-        tag = POL
-    }
-}
-```
-AI picks the focus with the highest randomly generated value. Multiplied by 1.5 for continuing the same branch.
-
-### Search Filters
-```
-search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_POLITICAL }
-```
-Custom filters use sprite `GFX_FOCUS_FILTER_MY_MOD` and localisation key `FOCUS_FILTER_MY_MOD`.
-
-### Titlebar Styles
-```
-text_icon = example_style
-```
-Styles defined in root-level `style = { ... }` blocks with sprites for `unavailable`, `available`, `current`, `completed` states.
-
-## Shared Focuses
-
-Shared focuses can be used across multiple focus trees:
-
-```
-shared_focus = {
-    id = LATIN_focus_name
-    x = 0 y = 0
-    icon = GFX_icon
-    completion_reward = { add_political_power = 100 }
-}
-```
-
-Include in a tree with: `shared_focus = LATIN_focus_name` (loads all prerequisite-connected shared focuses).
-
-**Setting `shared_focus` to a non-existent focus causes a crash.**
-**No non-shared focuses + shared focus = crash.**
-
-### Joint Focuses
-Joint focuses share completion between countries:
-```
-joint_focus = {
-    id = LATIN_focus_name_2
-    joint_trigger = { is_latin_american_country = yes }
-    completion_reward = { ... }                        # All joint countries
-    completion_reward_joint_originator = { ... }       # Only the completer
-    completion_reward_joint_member = { ... }           # Other joint countries
-}
-```
-
-## Continuous Focuses
-
-Location: `<mod>/common/continuous_focus/*.txt`
-
-```
-continuous_focus_palette = {
-    id = BHR_focus_palette
-    country = { factor = 0 modifier = { tag = BHR add = 10 } }
-    position = { x = 50 y = 1000 }
     
     focus = {
-        id = BHR_focus_name_1
-        icon = GFX_focus_icon_name_1
-        daily_cost = 1
-        available = { has_war = no }
-        enable = { ... }
-        modifier = { stability_weekly = 0.005 }
-        supports_ai_strategy = ai_focus_peaceful
+        id = SCO_first_focus
+        x = 5 y = 0                       # 1 x unit = 96px, 1 y unit = 130px
+        icon = GFX_focus_SCO_first
+        cost = 8
+        completion_reward = { add_political_power = 100 }
     }
 }
 ```
 
-## AI Strategy Plans
+## Key Rules
 
-Location: `<mod>/common/ai_strategy_plans/*.txt`
+- **Positions**: prefer `relative_position_id = TAG_other_focus`. `offset = { x = -5 trigger = { ... } }` for conditional shifts. Circular relative positions **crash**.
+- **Prerequisites**: one block per AND, multiple `focus =` inside one block = OR. They must sit physically above the focus. Use `has_completed_focus` for complex logic. Duplicate focus IDs across trees break the lines.
+- **Visibility vs availability**: `available` (takable), `allow_branch` (visible), `bypass`, `bypass_if_unavailable`, `cancel_if_invalid` etc. — full argument list in `National focus modding.md`.
+- **Effects**: `completion_reward` (focus is **not** yet marked complete inside it — `has_completed_focus` returns false), `select_effect`, `bypass_effect`.
+- **Icons**: each focus needs `GFX_<name>` **and** `GFX_<name>_shine` sprites; missing `_shine` is the most common cause of broken shine animation. Templates → `National focus modding.md`.
+- **`ai_will_do`** on a focus sets AI preference; ordered AI plans live in `common/ai_strategy_plans/` → [[hoi4-ai]].
+- **Shared focuses**: declare `shared_focus = { ... }`, include with `shared_focus = LATIN_name` inside a tree. Joint focuses share completion between countries (`joint_trigger`, `completion_reward_joint_*`).
+- **Continuous focuses**: `continuous_focus_palette = { id = ... focus = { daily_cost = 1 modifier = { ... } } }`; `supports_ai_strategy` links to AI focuses.
 
-```
-BHR_historical = {
-    name = "Historical plan for BHR"
-    allowed = { tag = BHR }                          # Checked ONCE at game start
-    enable = {                                       # Checked daily
-        is_historical_focus_on = yes
-        has_game_rule = { rule = BHR_ai_behavior option = DEFAULT }
-    }
-    abort = { ... }                                  # Removes plan if true
-    ai_national_focuses = {                           # Focuses in priority order
-        BHR_focus_name_1 BHR_focus_name_2
-    }
-    focus_factors = {                                 # ai_will_do multipliers
-        BHR_focus_name_3 = 0
-        BHR_focus_name_5 = 2
-    }
-    weight = { ... }                                  # Overall plan weight
-}
-```
+## Fatal Pitfalls
 
-### Custom Game Rules
-For random AI paths, set a random country flag in `on_startup` and check it in `enable`.
-
-## Focus Icons (Sprite Setup)
-
-Location: `<mod>/interface/*.gfx`
-
-Focus needs two sprites:
-1. Regular: `GFX_focus_icon_name`
-2. Shine: `GFX_focus_icon_name_shine` (with `_shine` suffix — this is **mandatory**)
-
-Shine sprite template:
-```
-spriteType = {
-    name = GFX_focus_icon_name_shine
-    texturefile = gfx/interface/goals/filename.dds
-    effectFile = gfx/FX/buttonstate.lua
-    animation = {
-        animationmaskfile = gfx/interface/goals/filename.dds
-        animationtexturefile = gfx/interface/goals/shine_overlay.dds
-        animationrotation = -90.0
-        animationlooping = no
-        animationtime = 0.75
-        animationblendmode = "add"
-        animationtype = "scrolling"
-        animationrotationoffset = { x = 0.0 y = 0.0 }
-        animationtexturescale = { x = 1.0 y = 1.0 }
-    }
-    animation = {                                       # Second wave
-        animationmaskfile = gfx/interface/goals/filename.dds
-        animationtexturefile = gfx/interface/goals/shine_overlay.dds
-        animationrotation = 90.0
-        animationlooping = no
-        animationtime = 0.75
-        animationblendmode = "add"
-        animationtype = "scrolling"
-        animationrotationoffset = { x = 0.0 y = 0.0 }
-        animationtexturescale = { x = 1.0 y = 1.0 }
-    }
-    legacy_lazy_load = no
-}
-```
-
-## Key Pitfalls
-
-- **Focus not marked complete** inside `completion_reward` — `has_completed_focus` returns false
-- **Duplicate focus IDs** across different trees break lines
-- **Recursive `relative_position_id`** causes crashes
-- **Missing `_shine` sprite** is the most common reason shine animation doesn't work
-- **`shared_focus` referencing non-existent focus** crashes at main menu
-- **allow_branch** doesn't inherit from parent — child focuses with their own `allow_branch` must re-check parent conditions
+- `shared_focus` pointing at a non-existent focus → **crash** at main menu
+- Tree with only shared focuses and no own focus → **crash**
+- Recursive `relative_position_id` → **crash**
+- Missing `_shine` sprite → shine silently missing
 
 ## References
 
-This skill covers the essentials. For the complete, unabridged reference with exhaustive details, read the following file(s) under the master skill's references directory:
+Full details in the [[hoi4-mod]] skill's `references/` folder:
 
-- `skills/hoi4-mod/references/National focus modding.md` — Full reference for focus trees, shared focuses, continuous focuses, and AI strategy plans.
+- `National focus modding.md` — every focus/tree argument, search filters, titlebar styles, icon + shine sprite template, continuous/joint focuses
+- [[hoi4-ai]] — AI strategy plans and focus order; [[hoi4-gui]] — sprite setup; [[hoi4-idea]] — focus rewards giving ideas

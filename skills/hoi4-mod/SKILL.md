@@ -3,227 +3,104 @@ name: hoi4-mod
 description: Master skill for Hearts of Iron IV mod creation. Use this skill whenever the user wants to create a new HOI4 mod, understand mod structure and file layout, figure out which game files to modify, or learn the modding workflow. Also serves as an index of all specialized sub-skills — use this first, then follow [[double-bracket links]] to the relevant sub-skill for detailed implementation.
 ---
 
-# Hearts of Iron IV Modding - Master Skill
+# HOI4 Modding — Master Skill
 
-This skill provides a comprehensive overview of creating mods for Hearts of Iron IV. For detailed implementation on specific topics, refer to the corresponding sub-skill.
+Entry point for creating HOI4 mods: mod setup, file layout, and routing to the specialized sub-skills and `references/`.
 
-## The Golden Rule
+## Golden Rule
 
-**Mods use the same file and folder structure as the game itself.** Whatever exists in the base game can be overridden by placing a file with the same name at the same relative path in your mod. New content uses new filenames.
+**Mods mirror the game's file structure: same path + same filename = override vanilla; a new filename = add content.** Minimize vanilla overrides for compatibility.
 
-## Mod File Structure
+## Mod Setup
 
-### Local Mod
+- Local mods: Linux `~/.local/share/Paradox Interactive/Hearts of Iron IV/mod/`; Windows `.../Documents/Paradox Interactive/Hearts of Iron IV/mod/`
+- Each mod needs: a `.mod` file, the mod folder (or zip) with game data, and `descriptor.mod` inside the folder (same content as the `.mod` file)
+- Optional `thumbnail.png` (1:1, <1MB for ParadoxMods). Launcher: *Mods → Mod Tools → Create Mod* auto-generates the structure. Case sensitivity matters on Mac/Linux.
+- Submods: `dependencies = { "testmodA" }` in the `.mod` file — name must match the other mod's `name` exactly. Otherwise mods load alphabetically.
+- Steam Workshop mods live under `.../workshop/content/394360/`.
+- Full details (descriptors, launcher quirks, upload) → `references/Mod structure.md`.
 
-Local mods live in:
-- **Linux**: `~/.local/share/Paradox Interactive/Hearts of Iron IV/mod/`
-- **Windows**: `C:\Users\<Username>\Documents\Paradox Interactive\Hearts of Iron IV\mod\`
-
-Each mod requires:
-1. A **`.mod` file** (any name) — mod metadata for the launcher
-2. A **mod folder** (or zip) with game data in the same structure as the game
-3. A **`descriptor.mod`** inside the mod folder (UTF-8 without BOM, same content as .mod)
-4. A **`thumbnail.png`** (optional, 1:1 ratio, <1MB for ParadoxMods)
-
-Use the launcher's *Mods* -> *Mod Tools* -> *Create Mod* to auto-generate the structure. **Case sensitivity matters** on Mac/Linux.
-
-### The `.mod` File
-
+Minimal `.mod` file:
 ```
 name="Test1"
 path="mod/test1"
 tags={ "Alternative History" }
-picture="thumbnail.png"
-supported_version="1.17.*"
-version="1.0b"
-```
-
-### Submods and Dependencies
-
-```
-name="testmodB"
-path="mod/testmodb/"
-dependencies={ "testmodA" }
 supported_version="1.17.*"
 ```
-Mods load alphabetically by default. Dependencies enforce ordering. The dependency name must match the other mod's `name` field exactly.
 
-### Steam Workshop Mods
+## Hard Rules
 
-Stored at `.../workshop/content/394360/`. Use `remote_file_id` in the `.mod` file alongside `archive` path.
+| File | Encoding |
+|---|---|
+| All `.txt` files | UTF-8 **without** BOM |
+| `descriptor.mod` | UTF-8 **without** BOM |
+| Localisation `.yml` | UTF-8 **with** BOM |
 
-### Key Rules
+- Forward slashes `/` in paths, never backslashes
+- Prefix IDs (focuses, ideas, events) with a tag or namespace to avoid duplicate-ID bugs
+- Check `.../Hearts of Iron IV/logs/error.log` when anything breaks → [[hoi4-trouble]]
+- Use `replace_path` in the `.mod` file only to unload whole vanilla folders (total overhauls)
 
-- All `.txt` files: **UTF-8 without BOM**
-- Localisation `.yml` files: **UTF-8 with BOM**
-- `descriptor.mod`: **UTF-8 without BOM**
-- To overwrite vanilla: use the **same filename** at the same path
-- To add content: use a **different filename**
-- Minimize vanilla file overwrites for compatibility
-- Check `.../Documents/Paradox Interactive/Hearts of Iron IV/logs/error.log` when things break
+## Where Content Lives
 
-## Game Directory Structure
-
-### `common/` — Game Data Definitions
-
-| Path | Purpose | Sub-skill |
+| Path | Holds | Skill |
 |---|---|---|
-| `common/country_tags/` | 3-letter country tag registrations | [[hoi4-country]] |
-| `common/countries/` | Country colors, graphical culture | [[hoi4-country]] |
-| `common/characters/` | Character definitions (leaders, advisors) | [[hoi4-character]] |
-| `common/ideas/` | National spirits, laws, designers | [[hoi4-idea]] |
-| `common/idea_tags/` | Idea categories | [[hoi4-idea]] |
-| `common/national_focus/` | Focus trees and shared focuses | [[hoi4-focus]] |
-| `common/continuous_focus/` | Continuous focus palettes | [[hoi4-focus]] |
-| `common/decisions/` | Decisions and categories | [[hoi4-decision]] |
-| `common/technologies/` | Technologies and doctrines | [[hoi4-tech]] |
-| `common/technology_tags/` | Technology categories/folders | [[hoi4-tech]] |
-| `common/units/` | Sub-units, equipment types | [[hoi4-tech]] |
-| `common/units/equipment/` | Equipment definitions | [[hoi4-tech]] |
-| `common/bookmarks/` | Start date definitions | [[hoi4-bookmark]] |
+| `common/country_tags/`, `common/countries/` | Country tags, colors, graphical culture | [[hoi4-country]] |
+| `history/countries/` | Starting state per tag: politics, tech, OOB link | [[hoi4-country]] |
+| `common/characters/`, `common/names/`, `portraits/`, `history/general/` | Characters, namelists, portrait pools, generic characters | [[hoi4-character]] |
+| `common/ideas/`, `common/idea_tags/` | National spirits, laws, designers, advisors | [[hoi4-idea]] |
+| `common/national_focus/`, `common/continuous_focus/` | Focus trees, shared/joint/continuous focuses | [[hoi4-focus]] |
+| `events/` | Events (country, news, state, unit leader) | [[hoi4-event]] |
+| `common/decisions/` | Decisions, missions, targeted decisions | [[hoi4-decision]] |
+| `common/technologies/`, `common/technology_tags/` | Techs, doctrines, tech categories | [[hoi4-tech]] |
+| `common/units/`, `common/units/equipment/` | Sub-units, equipment, modules, upgrades | [[hoi4-tech]] |
+| `history/units/` | Orders of battle | [[hoi4-tech]] |
 | `common/ideologies/` | Ideology groups and types | [[hoi4-ideology]] |
 | `common/autonomous_states/` | Autonomy levels (puppet types) | [[hoi4-autonomy]] |
-| `common/names/` | Character name lists per country | [[hoi4-character]] |
-| `common/modifiers/` | Static/dynamic modifier templates | [[hoi4-modifier]] |
-| `common/modifier_definitions/` | Modifier UI definitions | [[hoi4-modifier]] |
-| `common/scripted_effects/` | Reusable effect macros | [[hoi4-script]] |
-| `common/scripted_triggers/` | Reusable trigger macros | [[hoi4-script]] |
+| `common/bookmarks/` | Start-date bookmarks | [[hoi4-bookmark]] |
+| `common/modifiers/`, `common/dynamic_modifiers/`, `common/modifier_definitions/`, `common/opinion_modifiers/` | Modifier templates, definitions, opinion modifiers | [[hoi4-modifier]] |
+| `common/scripted_effects/`, `common/scripted_triggers/` | Reusable effect/trigger macros | [[hoi4-script]] |
+| `common/on_actions/` | Event hooks | [[hoi4-onaction]] |
+| `common/defines/` | Game constants (override file only) | [[hoi4-define]] |
+| `common/ai_strategy/`, `common/ai_strategy_plans/`, `common/ai_focuses/` | AI behavior, focus orders, plans | [[hoi4-ai]] |
 | `common/scripted_guis/` | Scripted GUI definitions | [[hoi4-gui]] |
-| `common/scripted_localisation/` | Dynamic localization | [[hoi4-assets]] |
-| `common/on_actions/` | Game event hooks | [[hoi4-onaction]] |
-| `common/defines/` | Game constants (use override file!) | [[hoi4-define]] |
-| `common/ai_strategy/` | AI behavior definitions | [[hoi4-ai]] |
-| `common/ai_strategy_plans/` | AI strategy plans (focus order) | [[hoi4-ai]] |
-| `common/ai_focuses/` | AI focus selection preferences | [[hoi4-ai]] |
-| `common/dynamic_modifiers/` | Dynamic modifier definitions | [[hoi4-modifier]] |
-| `common/opinion_modifiers/` | Diplomatic opinion modifiers | [[hoi4-modifier]] |
-| `common/bop/` | Balance of power definitions | (see references) |
-| `common/military_industrial_organization/` | MIO definitions | (see references) |
-| `common/resources/` | Resource definitions | (see references) |
-| `common/abilities/` | Commander abilities | (see references) |
-| `common/operations/` | Spy operations | (see references) |
+| `map/`, `history/states/` | Map bitmaps/definitions, state history | [[hoi4-map]] |
+| `interface/` | GUI layouts (`.gui`) and sprite definitions (`.gfx`) | [[hoi4-gui]] |
+| `gfx/` | Image assets — every image also needs a spriteType | [[hoi4-gui]], [[hoi4-assets]] |
+| `localisation/`, `common/scripted_localisation/` | All text, per-language `.yml` files, dynamic localisation | [[hoi4-assets]] |
+| `music/`, `sound/` | Music tracks and sound effects | [[hoi4-assets]] |
 
-### `history/` — Starting Game State
+Topics with **no dedicated sub-skill** — read the reference directly:
 
-| Path | Purpose | Sub-skill |
-|---|---|---|
-| `history/countries/` | Starting data per country tag | [[hoi4-country]] |
-| `history/states/` | State ownership, population, buildings | [[hoi4-map]] |
-| `history/units/` | Order of battle (starting military) | [[hoi4-tech]] |
-| `history/general/` | Generic character generation effects | [[hoi4-character]] |
-
-### Other Top-Level Directories
-
-| Path | Purpose | Sub-skill |
-|---|---|---|
-| `events/` | Event definitions | [[hoi4-event]] |
-| `map/` | Map data (provinces, terrain, rivers) | [[hoi4-map]] |
-| `gfx/` | Graphical assets (flags, icons, portraits) | [[hoi4-gui]] (sprites) / [[hoi4-assets]] (overview) |
-| `gfx/flags/` | Country flags (TGA, 82x52 / 41x26 / 10x7) | [[hoi4-country]] |
-| `interface/` | UI definitions (.gui and .gfx files) | [[hoi4-gui]] |
-| `localisation/` | Text in all supported languages | [[hoi4-assets]] |
-| `music/` | Music files | [[hoi4-assets]] |
-| `sound/` | Sound effects | [[hoi4-assets]] |
-| `portraits/` | Portrait pools for randomly generated leaders | [[hoi4-character]] |
-
-## Modding Workflow
-
-### 1. Create the Mod Structure
-Use the launcher or manually create the `.mod` file and folder.
-
-### 2. Decide What to Change
-Identify which game files control the feature. Look at base game files: `../hoi4/Hearts of Iron IV/`
-
-### 3. Create Files
-- To **extend**: new files with unique names
-- To **override**: copy the vanilla file and modify
-
-### 4. Test
-Enable the mod, check `error.log`, use debug mode (`-debug`).
-
-### 5. Iterate
-Fix errors — common pitfalls: wrong encoding, missing sprite definitions, duplicate IDs, missing localisation.
-
-## Choosing the Right Sub-Skill
-
-- **Create a new country** -> [[hoi4-country]]
-- **Create/modify a focus tree** -> [[hoi4-focus]]
-- **Add events** -> [[hoi4-event]]
-- **Add decisions/missions** -> [[hoi4-decision]]
-- **Add national spirits/ideas/laws** -> [[hoi4-idea]]
-- **Write effects / triggers / scopes** -> [[hoi4-script]]
-- **Apply modifiers** -> [[hoi4-modifier]]
-- **Modify game constants** -> [[hoi4-define]]
-- **Add localisation/text** -> [[hoi4-assets]]
-- **Create characters (leaders/advisors)** -> [[hoi4-character]]
-- **Add technologies / OOB / divisions / equipment** -> [[hoi4-tech]]
-- **Add ideologies** -> [[hoi4-ideology]]
-- **Mod autonomy/puppet levels** -> [[hoi4-autonomy]]
-- **Mod the UI / sprites / scripted GUI** -> [[hoi4-gui]]
-- **Edit the map / states** -> [[hoi4-map]]
-- **Add bookmarks** -> [[hoi4-bookmark]]
-- **Add on_actions** -> [[hoi4-onaction]]
-- **Configure AI behavior** -> [[hoi4-ai]]
-- **Debug errors** -> [[hoi4-trouble]]
-
-## Key Conventions
-
-1. **UTF-8 without BOM** for all `.txt` files
-2. **UTF-8 with BOM** for all localisation `.yml` files
-3. **Use forward slashes** `/` in file paths, not backslashes
-4. **Prefix focus/idea IDs** with country tag to avoid duplicates
-5. **Create new files** instead of overwriting vanilla wherever possible
-6. **Check error.log** when something doesn't work
-7. **Use `replace_path`** sparingly to unload specific vanilla folders
-
-## Reference Documentation
-
-This skill includes a **`references/`** directory with 49 detailed reference documents from the HOI4 modding wiki. These contain the full, unabridged specifications — each sub-skill covers the essentials, but reference files have exhaustive parameter lists, edge cases, and advanced usage.
-
-**When you need more detail than a sub-skill provides, read the corresponding reference file directly.**
-
-| Topic | Reference file(s) |
+| Topic | Reference |
 |---|---|
-| Mod structure / setup | `references/Mod structure.md` |
-| Country creation | `references/Country creation.md` |
-| National focuses | `references/National focus modding.md` |
-| Events | `references/Event modding.md` |
-| Ideas | `references/Idea modding.md` |
-| Decisions | `references/Decision modding.md` |
-| Effects, triggers, scopes | `references/Effect.md`, `references/Triggers.md`, `references/Scopes.md` |
-| Data structures | `references/Data structures.md` |
-| Modifiers (full list) | `references/Modifiers.md`, `references/List of modifiers.md` |
-| Localisation | `references/Localisation.md` |
-| Characters | `references/Character modding.md` |
-| States | `references/State modding.md` |
-| Map modding | `references/Map modding.md` |
-| Map nudger tool | `references/Nudger.md` |
-| Strategic regions | `references/Strategic region modding.md` |
-| Supply areas | `references/Supply areas modding.md` |
-| Division / OOB | `references/Division modding.md` |
-| Technology | `references/Technology modding.md` |
-| Units / equipment | `references/Unit modding.md`, `references/Equipment modding.md` |
-| Ideologies | `references/Ideology modding.md` |
-| Graphics / sprites | `references/Graphical asset modding.md` |
-| Portraits | `references/Portrait modding.md` |
-| Interface / GUI | `references/Interface modding.md` |
-| Scripted GUI | `references/Scripted GUI modding.md` |
-| Bookmarks | `references/Bookmark modding.md` |
-| On actions | `references/On actions.md` |
-| Autonomy states | `references/Autonomy state modding.md` |
-| Defines | `references/Defines.md` |
-| AI modding | `references/AI focuses.md` |
-| Troubleshooting | `references/Troubleshooting.md` |
 | Balance of power | `references/Balance of power modding.md` |
-| Factions | `references/Faction modding.md` |
-| Buildings | `references/Building modding.md` |
-| Namelists | `references/Namelist modding.md` |
-| Music / Sound | `references/Music modding.md`, `references/Sound modding.md` |
+| Buildings (definitions, beyond state history) | `references/Building modding.md` |
 | Console commands | `references/Console commands.md` |
-| MIO | `references/Military industrial organization modding.md` |
 | Cosmetic tags | `references/Cosmetic tag modding.md` |
-| Resources | `references/Resources modding.md` |
-| Fonts | `references/Font modding.md` |
-| Particles / Posteffects | `references/Particle modding.md`, `references/Posteffect modding.md` |
 | Entities (3D models) | `references/Entity modding.md` |
+| Factions | `references/Faction modding.md` |
+| Military industrial organizations | `references/Military industrial organization modding.md` |
+| Resources (definitions) | `references/Resources modding.md` |
+| Strategic regions, supply areas | `references/Strategic region modding.md`, `references/Supply areas modding.md` |
+| Particles, posteffects | `references/Particle modding.md`, `references/Posteffect modding.md` |
 | Achievements | `references/Achievement modding.md` |
+| Commander abilities, spy operations (`common/abilities/`, `common/operations/`) | No offline reference — use the online wiki |
+
+## Workflow
+
+1. Create the mod structure (launcher or manually)
+2. Identify the vanilla files controlling the feature — read them in the game install (`../hoi4/Hearts of Iron IV/`)
+3. Extend with new files, or override with a same-name copy
+4. Test: enable the mod, launch with `-debug`, read `error.log`
+5. Iterate — most failures are encoding, missing sprites, duplicate IDs, or missing localisation → [[hoi4-trouble]]
+
+## References
+
+`references/` (in this skill folder) is a full offline snapshot of the HOI4 modding wiki (49 files). Each sub-skill routes to its own files; for anything a sub-skill lacks, read the matching reference.
+
+Prefer the offline snapshot. Fetch the online wiki only for content newer than the snapshot or topics not covered locally:
+
+- Game wiki: https://hoi4.paradoxwikis.com/Hearts_of_Iron_4_Wiki — mirror: https://cooderatom.github.io/hoi4-zh-wiki/Hearts_of_Iron_4_Wiki
+- Modding wiki: https://hoi4.paradoxwikis.com/Mod_structure — mirror: https://cooderatom.github.io/hoi4-zh-wiki/Mod_structure.html
+- Mirror rule: replace `hoi4.paradoxwikis.com` with `cooderatom.github.io/hoi4-zh-wiki`; mirrored article URLs end with `.html`.
