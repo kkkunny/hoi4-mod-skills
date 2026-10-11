@@ -55,3 +55,4 @@ Full details in the [[hoi4-mod]] skill's `references/` folder:
 
 - `Idea modding.md` — all categories, idea arguments, designer bonuses, timed/hidden ideas, law slots
 - [[hoi4-modifier]] — modifier keys; [[hoi4-focus]] / [[hoi4-event]] — granting ideas
+- [[hoi4-mechanics]] — mechanics behind economy laws: consumer goods, factory output, trade, fuel — its `references/Production.md`, `Trade.md`, `Fuel.md`; politics and manpower — its `Government.md`, `Manpower.md`

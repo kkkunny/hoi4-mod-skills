@@ -87,6 +87,10 @@ Topics with **no dedicated sub-skill** — read the reference directly:
 | Achievements | `references/Achievement modding.md` |
 | Commander abilities, spy operations (`common/abilities/`, `common/operations/`) | No offline reference — use the online wiki |
 
+## Game Mechanics
+
+How the game actually works — player view, engine behaviour, modding surfaces, every claim sourced → [[hoi4-mechanics]] (start: `references/Production.md`).
+
 ## Workflow
 
 1. Create the mod structure (launcher or manually)

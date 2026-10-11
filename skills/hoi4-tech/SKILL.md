@@ -97,3 +97,8 @@ Full details in the [[hoi4-mod]] skill's `references/` folder:
 - `Technology modding.md` — tech/doctrine arguments, categories, folders, GUI integration
 - `Division modding.md` — full OOB format, templates, unit placement, production
 - `Unit modding.md` — all sub-unit stats; `Equipment modding.md` — archetypes, modules, upgrades, DLC systems
+- [[hoi4-mechanics]] — why production behaves this way (factory output, efficiency, resources); start at its `references/Production.md`
+- [[hoi4-mechanics]] — how divisions, combat, terrain/weather and attrition actually work — its `Division.md`, `Land battle.md`, `Terrain and weather.md`, `Attrition.md`
+- [[hoi4-mechanics]] — how air and naval warfare actually resolves — its `Air warfare.md`, `Navy.md`
+- [[hoi4-mechanics]] — research timing, XP generation and unit experience — its `Research and experience.md`
+- [[hoi4-mechanics]] — special projects, nuclear weapons and raids — its `Special project.md`, `Nuclear bomb.md`, `Raid.md`

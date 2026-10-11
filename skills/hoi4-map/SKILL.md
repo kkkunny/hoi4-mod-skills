@@ -25,7 +25,7 @@ Two domains: **map files** (bitmaps, definitions — the hardest part of HOI4 mo
 
 ## States
 
-`history/states/*.txt` — **filenames irrelevant**; never rename vanilla files without `replace_path` (else both load). State categories in `common/state_categories/`.
+`history/states/*.txt` — **filenames irrelevant**; never rename vanilla files without `replace_path` (else both load). State categories in `common/state_category/`.
 
 ```
 state = {
@@ -69,4 +69,5 @@ Full details in the [[hoi4-mod]] skill's `references/` folder:
 - `Map modding.md` — full map pipeline, BMP internals, province definitions
 - `State modding.md` — all state arguments, buildings, population, categories
 - `Strategic region modding.md`, `Supply areas modding.md`, `Nudger.md` — regions, logistics, map tool
+- [[hoi4-mechanics]] — how buildings, slots, infrastructure and supply actually behave — its `Construction.md`, `Logistics.md`
 - [[hoi4-country]] — country setup; [[hoi4-modifier]] — state modifiers

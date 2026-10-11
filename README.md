@@ -1,13 +1,14 @@
 # hoi4-mod-skills
 
-让 AI agent 学会制作《钢铁雄心 4》（Hearts of Iron IV）模组的技能包 —— 包含 20 个 Agent Skills，覆盖从零创建 mod 到脚本、国策、事件、地图、界面的完整流程。
+让 AI agent 学会制作《钢铁雄心 4》（Hearts of Iron IV）模组的技能包 —— 包含 21 个 Agent Skills，覆盖从零创建 mod 到脚本、国策、事件、地图、界面与游戏机制的完整流程。
 
 ## 这是什么
 
 本仓库把 HOI4 的 mod 制作知识整理成 20 个**技能**，供支持 Agent Skills 的 AI 编码助手使用（如 OpenCode、Claude Code）。安装之后，你只需要用自然语言描述需求，agent 会自动加载对应技能来完成工作——它知道该改哪些目录、文件怎么写、常见坑在哪里。
 
-- 1 个主技能负责总览与调度，19 个领域子技能负责具体实现；
+- 1 个主技能负责总览与调度，20 个领域子技能负责具体实现；
 - 附带 49 篇 HOI4 modding wiki 离线文档，不联网也能查资料；
+- 附带游戏机制策展文档（覆盖经济、后勤、陆战、海空、政治、人力、科研、外交、特殊项目等系统），逐句注明来源与版本；
 - 覆盖从“新建国家”到“地图与界面”的全部常见 mod 需求。
 
 ## 覆盖内容
@@ -34,6 +35,7 @@
 | | `hoi4-assets` | 本地化、音频、gfx 总览 |
 | 其它 | `hoi4-ai` | AI 行为与策略计划 |
 | | `hoi4-trouble` | 错误排查与调试 |
+| 机制 | `hoi4-mechanics` | 游戏机制总结：玩家与实现两层视角，逐句注明来源（经济、后勤、陆战、海空、政治、人力、科研、外交…）|
 
 ## 安装
 
@@ -69,9 +71,10 @@ ln -s "$PWD"/skills/* ~/.config/opencode/skills/
 ## 仓库内容
 
 - `skills/` — 技能本体：每个目录一个技能，入口为 `SKILL.md`
+- `skills/hoi4-mechanics/references/` — 游戏机制策展总结：四节结构（玩家/引擎/可改面/未知项），逐句引用游戏 wiki、modding 快照与原版文件
 - `docs/` — HOI4 modding wiki 的离线参考文档（49 篇），技能内容的事实来源
 - `AGENTS.md` — 面向 AI agent 的仓库说明（项目结构、编辑规范、资料来源），想了解项目内部组织也可以看
 
 ## 来源
 
-技能内容整理自 [Hearts of Iron IV Wiki](https://hoi4.paradoxwikis.com/Hearts_of_Iron_4_Wiki) 的 modding 页面。
+技能内容整理自 [Hearts of Iron IV Wiki](https://hoi4.paradoxwikis.com/Hearts_of_Iron_4_Wiki) 的 modding 页面；`hoi4-mechanics` 的机制总结另引用游戏 wiki 页面与原版游戏文件，并逐句标注来源与版本。

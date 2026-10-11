@@ -62,4 +62,5 @@ ENG = {
 Full details in the [[hoi4-mod]] skill's `references/` folder:
 
 - `Autonomy state modding.md` — all autonomy arguments, overlord/subject actions, effects, naming
+- [[hoi4-mechanics]] — how autonomy actually behaves (levels, gain/loss, independence) — its `Puppet.md`, `Occupation.md`
 - [[hoi4-country]] — history files; [[hoi4-assets]] — autonomy name localisation

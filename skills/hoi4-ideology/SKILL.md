@@ -50,4 +50,5 @@ ideas = {
 Full details in the [[hoi4-mod]] skill's `references/` folder:
 
 - `Ideology modding.md` — all type arguments, rules, dynamic ideologies, party/government setup
+- [[hoi4-mechanics]] — world-tension gates and faction-impact fields of ideologies — its `Diplomacy.md`
 - [[hoi4-country]] — country starting politics; [[hoi4-character]] — leader ideology; [[hoi4-assets]] — party/ideology localisation
