@@ -28,6 +28,7 @@ SCO = "countries/Scotland.txt"      # path is informational
 
 - **Forbidden tags** (internal conflicts): `NOT`, `AND`, `TAG`, `OOB`, `LOG`, `NUM`, `RED`, and purely numeric tags like `123`
 - `dynamic_tags = yes` marks subsequent tags as dynamic (civil war breakaways). **Too few dynamic tags = crash** when civil wars occur.
+- Replacing `common/country_tags` requires an empty country (tag, history, flag) for every uncovered vanilla tag and preservation of `common/country_tag_aliases` → [[hoi4-trouble]]'s `replace_path` table.
 
 ## Minimal Country
 
@@ -50,9 +51,10 @@ set_technology = { infantry_weapons = 1 }
 
 ## Key Rules
 
-- **Every country needs an OOB** — without one, buildings no longer function. DLC-specific gear needs `if = { limit = { has_dlc = "..." } }` branches.
+- **No OOB**: effect-built buildings may not apply until a reload — provide a minimal OOB if you add buildings via effects. DLC-specific gear needs `if = { limit = { has_dlc = "..." } }` branches.
 - Colors: `common/countries/colors.txt` (**must** be named `colors.txt`, so it overrides vanilla). `color` = map mode, `color_ui` = UI. Options → `Country creation.md`.
 - Flags: uncompressed **32-bit ARGB TGA**. Sizes 82x52 / 41x26 / 10x7. Name `TAG.tga`; ideology-specific `SCO_democratic.tga` takes priority.
+- Large total conversions can exceed the flag atlas; raise `COUNTRY_FLAG_MEDIUM_TEX_MAX_SIZE` / `COUNTRY_FLAG_SMALL_TEX_MAX_SIZE` (power of 2, max 2048) in `common/defines/`.
 - Date blocks in history (`1939.1.1 = { ... }`) apply only to start dates **strictly after** the timestamp.
 - Puppeting goes in the **subject's** history file, before `set_politics` (else politics reset). Non-TFV fallback: `puppet = SCO`. → [[hoi4-autonomy]]
 - Country name localisation priority: autonomous state > subject status > ideology > `TAG` → full chain and party/equipment keys in `Country creation.md`.
@@ -60,11 +62,12 @@ set_technology = { infantry_weapons = 1 }
 
 ## Fatal Pitfalls
 
-- **No OOB** → all buildings broken
+- **No OOB** → effect-built buildings may not apply until a save reload
+- **Replacing `common/country_tags` without stubbing every tag** → `Duplicate Country Tag`, missing history/flag, alias errors
 - **Leader recruited after `set_politics`** → leader never takes over
 - **Popularities not summing to 100** → `set_popularities` fails
 - **Extra closing bracket** in a history file → execution stops prematurely
-- **Too few dynamic tags** → crash on civil wars
+- **Too few dynamic tags** → crash on civil wars or `create_dynamic_country: No remaining dynamic tags`
 
 ## References
 

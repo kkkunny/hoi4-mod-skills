@@ -1,6 +1,6 @@
 ---
 name: hoi4-mod
-description: Master skill for Hearts of Iron IV mod creation. Use this skill whenever the user wants to create a new HOI4 mod, understand mod structure and file layout, figure out which game files to modify, or learn the modding workflow. Also serves as an index of all specialized sub-skills — use this first, then follow [[double-bracket links]] to the relevant sub-skill for detailed implementation.
+description: Master skill for Hearts of Iron IV mod creation. Use this skill whenever the user wants to create a new HOI4 mod, understand mod structure and file layout, figure out which game files to modify, learn the modding workflow, or build a tool/generator that emits HOI4 mod files. Also serves as an index of all specialized sub-skills — use this first, then follow [[double-bracket links]] to the relevant sub-skill for detailed implementation.
 ---
 
 # HOI4 Modding — Master Skill
@@ -10,6 +10,8 @@ Entry point for creating HOI4 mods: mod setup, file layout, and routing to the s
 ## Golden Rule
 
 **Mods mirror the game's file structure: same path + same filename = override vanilla; a new filename = add content.** Minimize vanilla overrides for compatibility.
+
+`replace_path` is not a bigger override: it unloads the whole vanilla folder, and every remaining vanilla reference must be replaced or stubbed → [[hoi4-trouble]].
 
 ## Mod Setup
 
@@ -45,7 +47,7 @@ supported_version="1.17.*"
 
 | Path | Holds | Skill |
 |---|---|---|
-| `common/country_tags/`, `common/countries/` | Country tags, colors, graphical culture | [[hoi4-country]] |
+| `common/country_tags/`, `common/country_tag_aliases/`, `common/countries/` | Country tags/aliases, colors, graphical culture | [[hoi4-country]] |
 | `history/countries/` | Starting state per tag: politics, tech, OOB link | [[hoi4-country]] |
 | `common/characters/`, `common/names/`, `portraits/`, `history/general/` | Characters, namelists, portrait pools, generic characters | [[hoi4-character]] |
 | `common/ideas/`, `common/idea_tags/` | National spirits, laws, designers, advisors | [[hoi4-idea]] |
@@ -64,6 +66,7 @@ supported_version="1.17.*"
 | `common/defines/` | Game constants (override file only) | [[hoi4-define]] |
 | `common/ai_strategy/`, `common/ai_strategy_plans/`, `common/ai_focuses/` | AI behavior, focus orders, plans | [[hoi4-ai]] |
 | `common/scripted_guis/` | Scripted GUI definitions | [[hoi4-gui]] |
+| `common/map_modes/` | Scripted map modes (layers, colors, icons) | [[hoi4-map]] |
 | `map/`, `history/states/` | Map bitmaps/definitions, state history | [[hoi4-map]] |
 | `interface/` | GUI layouts (`.gui`) and sprite definitions (`.gfx`) | [[hoi4-gui]] |
 | `gfx/` | Image assets — every image also needs a spriteType | [[hoi4-gui]], [[hoi4-assets]] |
@@ -95,7 +98,7 @@ How the game actually works — player view, engine behaviour, modding surfaces,
 
 1. Create the mod structure (launcher or manually)
 2. Identify the vanilla files controlling the feature — read them in the game install (`../hoi4/Hearts of Iron IV/`)
-3. Extend with new files, or override with a same-name copy
+3. Extend with new files, or override with a same-name copy. Replace a folder only when you can regenerate all of its consumers → [[hoi4-trouble]].
 4. Test: enable the mod, launch with `-debug`, read `error.log`
 5. Iterate — most failures are encoding, missing sprites, duplicate IDs, or missing localisation → [[hoi4-trouble]]
 

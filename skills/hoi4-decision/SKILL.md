@@ -52,6 +52,7 @@ Both `visible` and `available` must be true for a decision to be clickable.
 
 - **Missions** = decisions with `activation`, shown with a completion bar; `visible` does nothing for them.
 - **Targeted decisions** add `target_trigger` + `state_target = yes` / `on_map_mode = yes`. Inside `target_trigger`: `FROM` = target, `ROOT` = decision-taker; only checked while a state is hovered (performance).
+- **State-targeted decisions are selected on the map**: clicking a state closes the decision view, so a custom decision panel cannot keep reading the selected state. For a persistent per-state panel/button, use a scripted GUI in the state view → [[hoi4-gui]].
 - `ai_will_do` weights AI picking: `base`, `factor`, `add`.
 
 ## Fatal Pitfalls
@@ -59,6 +60,7 @@ Both `visible` and `available` must be true for a decision to be clickable.
 - **`allowed` used for dynamic conditions** → checks once at load, never updates
 - **`visible` used to gate missions** → ignored; use `activation`
 - **Non-numeric cost** → decision fails to load
+- **Expecting a state-targeted decision to keep the decision panel open** → the map click leaves the view; use a state-panel scripted GUI
 
 ## References
 

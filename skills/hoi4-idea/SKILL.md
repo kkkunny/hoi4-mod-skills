@@ -42,10 +42,13 @@ ideas = {
 - **Timed removal**: `days_of_removal`, `days_of_removal_if_not_completed`.
 - **Hidden ideas**: category `hidden`, still add/remove like any idea.
 - **Generic sprite**: `GFX_idea_` is used when no picture is set (idea still works).
+- **Replacing `common/idea_tags`**: never ship a partial category set — vanilla ideas and focus slots reference `country`, `hidden_ideas`, designer/advisor slots, etc., and cascade into `Unknown category` / `Invalid idea`. Prefer a same-name `00_idea.txt` override that removes only the law `slot` lines; keep every other category/slot. See [[hoi4-trouble]]'s `replace_path` table.
+- **Removing vanilla laws**: keep those law idea IDs defined (e.g. in `hidden_ideas`); focus/script references to `economy`, `trade_laws`, `mobilization_laws` still need to resolve.
 
 ## Fatal Pitfalls
 
 - **Duplicate idea IDs** across files → unpredictable behavior
+- **`replace_path common/idea_tags` with a partial category set** → thousands of `Unknown category` / `Invalid idea`
 - **`allowed` used for dynamic conditions** → checks only at game start; use `available`
 - **Referenced sprite missing** → default icon, not an error (check visuals)
 

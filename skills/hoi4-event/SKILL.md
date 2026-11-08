@@ -17,7 +17,7 @@ Covers event files, event firing, options, pictures, and chains.
 add_namespace = sco_events            # declare BEFORE any event using it
 
 country_event = {
-    id = sco_events.0                 # part after the namespace must be an integer
+    id = sco_events.0                 # exactly one dot; part after it must be an integer
     title = sco_events.0.t
     desc = sco_events.0.desc
     picture = GFX_sco_event_picture
@@ -51,7 +51,7 @@ country_event = {
 ## Fatal Pitfalls
 
 - **Missing namespace** → event ID becomes a malformed token
-- **Non-integer ID after the namespace** → several events collapse into one
+- **Non-integer ID after the namespace / more than one dot** → events collapse into one or become malformed (`ns.news.1` is invalid)
 - **`state_event` scope ambiguity** → wrong scope; use `country_event` with event targets
 
 ## References

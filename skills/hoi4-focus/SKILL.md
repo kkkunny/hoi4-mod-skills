@@ -45,6 +45,8 @@ focus_tree = {
 - **`ai_will_do`** on a focus sets AI preference; ordered AI plans live in `common/ai_strategy_plans/` → [[hoi4-ai]].
 - **Shared focuses**: declare `shared_focus = { ... }`, include with `shared_focus = LATIN_name` inside a tree. Joint focuses share completion between countries (`joint_trigger`, `completion_reward_joint_*`).
 - **Continuous focuses**: `continuous_focus_palette = { id = ... focus = { daily_cost = 1 modifier = { ... } } }`; `supports_ai_strategy` links to AI focuses.
+- **Repeatable/recurring bonuses belong in `continuous_focus`** — don't build a normal focus that resets itself with a delayed event.
+- **Replacing `common/national_focus`** removes every vanilla focus ID; characters/ideas/scripted_localisation/`ai_strategy_plans` still reference them. Keep the IDs, or replace/stub every consumer; a blank tree + `load_focus_tree` hides gameplay without deleting IDs → [[hoi4-trouble]].
 
 ## Fatal Pitfalls
 
@@ -52,6 +54,7 @@ focus_tree = {
 - Tree with only shared focuses and no own focus → **crash**
 - Recursive `relative_position_id` → **crash**
 - Missing `_shine` sprite → shine silently missing
+- **Replacing `common/national_focus` without porting focus IDs** → `invalid focus` / `has_completed_focus` errors across vanilla content
 
 ## References
 

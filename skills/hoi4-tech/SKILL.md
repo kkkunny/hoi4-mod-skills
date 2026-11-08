@@ -47,7 +47,7 @@ Loaded from the country history file:
 oob = "SCO_1936"                    # land; set_oob works inside if-statements
 set_naval_oob = "SCO_1936_naval"    # naval; set_air_oob for air
 ```
-- **A country with no OOB has broken buildings** — always provide at least a minimal one.
+- **No OOB**: effect-built buildings may not apply until a save reload; total conversions can use runtime `division_template` + `create_unit` instead. `create_unit` works only in **state scope** — inside `every_owned_state`, use `owner = PREV`, not `ROOT`.
 - DLC gear/units need `if = { limit = { has_dlc = "Man the Guns" } ... }` variants (MTG ships, NSB tanks, BBA planes).
 - Division template minimal shape:
   ```
@@ -84,7 +84,7 @@ infantry_equipment = {
 
 ## Fatal Pitfalls
 
-- Country without OOB → broken buildings
+- Country without OOB + effect-built buildings → buildings may not apply; `create_unit` outside state scope or with wrong `owner` → no units
 - New tech branch without GUI edits → tech never visible
 - Support company without `group = support` → cannot be placed in support column
 - Module category mismatch → module not equipable

@@ -45,6 +45,12 @@ state = {
 }
 ```
 
+## Custom Map Modes
+
+`common/map_modes/*.txt` — top-level `scripted_map_modes = { ... }`. Each mode has `top` / `bottom` layers; `type` is `state`, `country`, `state_controller`, or `none`. In a layer's `color` block set `red` / `green` / `blue` / `alpha` temp variables (scope is the player; `FROM` is the rendered state/country). Limit rendering with `targets = { target_array = global.states }`, and use `update_daily = no` + `force_update_map_mode = { mapmode = <id> }` after initialization.
+
+Icons: `GFX_mapmode_buttons_deselected_small_<id>` / `GFX_mapmode_buttons_selected_small_<id>`; loc keys `MAPMODE_<ID>`, `MAPMODE_<ID>_NAME`, `MAPMODE_<ID>_DESCRIPTION`, `<id>_tooltip`. Full syntax: vanilla `common/map_modes/documentation.md`.
+
 ## Key Rules
 
 - Optional state fields: `impassable`, `resources = { steel = 10 }` (spelling: `aluminium`), `local_supplies`, `buildings_max_level_factor`.
@@ -57,6 +63,8 @@ state = {
 ## Fatal Pitfalls
 
 - **State ID gaps** → crash
+- **Map mode layer missing `red`/`green`/`blue`/`alpha` temp vars** → default/white render
+- **Missing `GFX_mapmode_buttons_*_small_<id>` or `MAPMODE_<ID>` keys** → no button icon / raw loc
 - **New province without `buildings.txt`/`supply_nodes.txt`/`railways.txt` entries** → crash
 - **8-bit BMP with regenerated color table** → corrupted map
 - **State with no owner receiving a transfer effect** → crash
@@ -68,6 +76,7 @@ Full details in the [[hoi4-mod]] skill's `references/` folder:
 
 - `Map modding.md` — full map pipeline, BMP internals, province definitions
 - `State modding.md` — all state arguments, buildings, population, categories
+- vanilla `common/map_modes/documentation.md` — scripted map mode layers, colors, targets (game install, not the wiki snapshot)
 - `Strategic region modding.md`, `Supply areas modding.md`, `Nudger.md` — regions, logistics, map tool
 - [[hoi4-mechanics]] — how buildings, slots, infrastructure and supply actually behave — its `Construction.md`, `Logistics.md`
 - [[hoi4-country]] — country setup; [[hoi4-modifier]] — state modifiers

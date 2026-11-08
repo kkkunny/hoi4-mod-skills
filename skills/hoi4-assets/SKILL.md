@@ -9,7 +9,7 @@ Covers game text (localisation), the `gfx/` layout, music, and sound. Sprites/GU
 
 ## Localisation
 
-`localisation/<language>/*_l_english.yml` — filename **must** contain the language code. **UTF-8 with BOM**, first line `l_english:`, one entry per line:
+`localisation/<language>/*_l_english.yml` — filename **must** contain the language code. **UTF-8 with exactly one BOM**, first line `l_english:`, one entry per line:
 
 ```
 l_english:
@@ -18,6 +18,8 @@ l_english:
 ```
 
 - Language codes: `english`, `french`, `german`, `spanish`, `braz_por`, `polish`, `russian`, `japanese`, `simp_chinese`, `korean`.
+- **Exactly one BOM** — a double BOM makes the header invalid and the whole file is rejected, so every key in it shows as a raw token.
+- Ship the language the player runs: an English-only custom-key file may not resolve in a `simp_chinese` game — generate `localisation/simp_chinese/` too.
 - Keys are ASCII only (letters, digits, `_ . -`); values on a single line in straight quotes; use `\n` for newlines, `\"` for quotes.
 - **Override vanilla text without copying files**: put replacement keys in `localisation/<language>/replace/*.yml` — the `replace/` folder takes priority.
 - Common key patterns: `TAG` / `TAG_DEF` / `TAG_ADJ` (countries), `idea_id` / `idea_id_desc`, `focus_id` / `focus_id_desc`, `decision_id` / `decision_id_desc`, `event_id.t` / `.desc` / `.a`, `STATE_n`, `VICTORY_POINTS_n`, `character_id[_desc]`. Full table → `Localisation.md`.
@@ -37,6 +39,8 @@ defined_text = {
 }
 ```
 
+- Scripted loc is evaluated in the current scope. A plain `.gui` tooltip has no country/state scope → renders `[KEY]`; mount dynamic tooltips through a scripted GUI with `context_type` → [[hoi4-gui]].
+
 ## Graphics & Audio
 
 - `gfx/` mirrors the game's structure: `flags/`, `interface/` (icons), `leaders/`, `event_pictures/`, `fonts/`. **Every image needs a spriteType** in `interface/*.gfx` → [[hoi4-gui]].
@@ -46,7 +50,9 @@ defined_text = {
 
 ## Fatal Pitfalls
 
-- **Wrong encoding** — the #1 cause of broken localisation (must be UTF-8 **with** BOM)
+- **Wrong encoding** — the #1 cause of broken localisation (UTF-8 with **exactly one** BOM)
+- **Double BOM** → the whole `.yml` is rejected, not just the first line
+- **English-only file in a non-English game** → custom keys may resolve to raw tokens
 - **Missing `l_english:` first line** → all entries land in no database
 - **Filename without the language code** → file not loaded at all
 - **Special characters/spaces in keys, missing closing quote, raw newlines** → rest of the file breaks

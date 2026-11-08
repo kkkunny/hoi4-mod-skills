@@ -28,7 +28,7 @@ on_actions = {
 
 ## Common Hooks
 
-- **Time**: `on_startup` (game/save load), `on_daily`, `on_weekly`, `on_monthly`, `on_yearly`
+- **Time**: `on_startup` (**new game only — not on save load**), `on_daily`, `on_weekly`, `on_monthly`, `on_yearly`
 - **War/peace**: `on_war_declared`, `on_peace_conference_started/ended`, `on_civil_war_start/end`, `on_capitulation`
 - **Diplomacy**: `on_faction_created/joined/left`, `on_puppet`, `on_puppet_released`, `on_guarantee`
 - **Politics**: `on_government_change`, `on_election`, `on_ruling_party_change`, `on_new_leader`
@@ -51,14 +51,17 @@ on_monthly = {
 }
 ```
 
-- **Scope**: varies per on_action — `on_startup` has no specific ROOT (target explicitly); war/diplomacy hooks put the relevant entities in `FROM`. Check the reference per hook.
+- **Scope**: varies per on_action. `on_startup` effects start with **no country/state scope**; entering a scope is mandatory before calling scoped effects. War/diplomacy hooks put the relevant entities in `FROM`. Check the reference per hook.
+- **Don't annex/delete the current element inside `every_country`** — later countries can be skipped; use `every_possible_country` or iterate a copy.
 - On_actions firing `random_events` do **not** preserve `FROM` chains from the triggering effect.
 - Common use: random AI path selection at `on_startup` (set a country flag, branch in `ai_strategy_plans` `enable`) → [[hoi4-ai]].
 - Effects/triggers syntax → [[hoi4-script]].
 
 ## Fatal Pitfalls
 
-- **Assuming a ROOT country in `on_startup`** → effects hit the wrong/no scope
+- **Assuming a country scope in `on_startup`** → `Invalid Scope ... provided: None`; enter a scope first
+- **Relying on `on_startup` for save loads** → it only runs on a new game
+- **Annexing the current country inside `every_country`** → later countries can be skipped
 - **Expensive `on_daily` effects** → run every day for every country; gate with triggers
 - **Weights not summing to 100** → fine (proportional), but `0` is the only "nothing happens" entry
 - **Expecting to overwrite vanilla on_actions** → additions are appended
