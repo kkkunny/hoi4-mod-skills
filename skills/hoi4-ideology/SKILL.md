@@ -33,6 +33,7 @@ ideas = {
 ## Key Rules
 
 - **Type vs group**: `set_politics = { ruling_party = communism }` takes a **group**; `country_leader = { ideology = stalinism }` takes a **type**. Mixing them up breaks leaders and politics.
+- **Type IDs are global** across all groups; vanilla already uses `socialism` and `anarchism`. Namespace custom types (e.g. `tl_socialism`) or the game logs `Duplicate database id`.
 - Common type arguments: `color`, `can_declare_war_on_same_ideology`, `can_boost_other_ideologies`, `can_send_volunteers`, `can_puppet`, `can_join_factions`, `can_host_exiles`, `puppet_cost_factor`, `min_surrender_limit`, `ai_faction_member_desire` — full list in `Ideology modding.md`.
 - `rules = { ... }` controls same-ideology interactions: faction invite/join, puppet, guarantee, lend-lease, military access.
 - `dynamic_ideology = yes` enables runtime-defined ideology types.
@@ -42,6 +43,7 @@ ideas = {
 ## Fatal Pitfalls
 
 - **Group used where a type is required** (leader `ideology`, type-specific triggers) → character/government fails
+- **Reusing a vanilla type ID** (`socialism`, `anarchism`) → `Duplicate database id`; prefix custom types
 - **Popularities not summing to 100** → `set_popularities` silently fails
 - **Character referencing an undefined type** → character won't function
 

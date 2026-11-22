@@ -76,6 +76,7 @@ Full details in the [[hoi4-mod]] skill's `references/` folder:
 
 - `Map modding.md` — full map pipeline, BMP internals, province definitions
 - `State modding.md` — all state arguments, buildings, population, categories
+- `Building modding.md` — building definitions, `icon_frame`, `GFX_buildings_strip` (icon details → [[hoi4-gui]])
 - vanilla `common/map_modes/documentation.md` — scripted map mode layers, colors, targets (game install, not the wiki snapshot)
 - `Strategic region modding.md`, `Supply areas modding.md`, `Nudger.md` — regions, logistics, map tool
 - [[hoi4-mechanics]] — how buildings, slots, infrastructure and supply actually behave — its `Construction.md`, `Logistics.md`

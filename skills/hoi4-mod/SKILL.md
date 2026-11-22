@@ -73,6 +73,8 @@ supported_version="1.17.*"
 | `localisation/`, `common/scripted_localisation/` | All text, per-language `.yml` files, dynamic localisation | [[hoi4-assets]] |
 | `music/`, `sound/` | Music tracks and sound effects | [[hoi4-assets]] |
 
+Working in a generator/template repo? Route by the **emitted path** in this table, not by the generator's language.
+
 Topics with **no dedicated sub-skill** — read the reference directly:
 
 | Topic | Reference |

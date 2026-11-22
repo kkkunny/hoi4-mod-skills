@@ -24,6 +24,7 @@ l_english:
 - **Override vanilla text without copying files**: put replacement keys in `localisation/<language>/replace/*.yml` — the `replace/` folder takes priority.
 - Common key patterns: `TAG` / `TAG_DEF` / `TAG_ADJ` (countries), `idea_id` / `idea_id_desc`, `focus_id` / `focus_id_desc`, `decision_id` / `decision_id_desc`, `event_id.t` / `.desc` / `.a`, `STATE_n`, `VICTORY_POINTS_n`, `character_id[_desc]`. Full table → `Localisation.md`.
 - Formatting: color codes `§R...§!`, dynamic commands `[Root.GetName]` → full list in `Localisation.md`.
+- `[?array]` does not print the whole array (0/first element); index `array^N` or iterate with scripted loc.
 - Country name priority chain (autonomy > subject > ideology > TAG) → `Country creation.md`.
 - Duplicate keys are logged in `logs/text.log`; which value wins is unpredictable — avoid duplicates.
 

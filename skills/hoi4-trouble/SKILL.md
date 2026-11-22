@@ -28,9 +28,11 @@ Workflow and quick-reference for debugging broken mods.
 | "Duplicate..." | same ID defined twice — harmless for some types, fatal for focuses/events |
 | Mod loads but content missing | wrong encoding, filename, or localisation key |
 | `Invalid Scope ... provided: None` | `on_startup` has no country/state scope — enter one first |
-| `Unknown category` / `Invalid idea` | `common/idea_tags` was replaced or only partially supplied |
+| `Unknown category` / `Invalid idea` | decision category not in `common/decisions/categories/`, or `common/idea_tags` partially replaced |
 | `Invalid trigger 'set_variable'` | effect-only command used in a trigger — use a temp variable or restructure |
-| `Could not find "X" in window "Y"` | a vanilla `.gui` override deleted a child node; keep it and `hide = yes` |
+| `Could not find "X" in window "Y"` | a vanilla `.gui` override deleted a child node, or stubbed it with the wrong element type |
+| `Duplicate database id` | same ID defined twice; sub-ideology types share one global namespace (`socialism`/`anarchism` are vanilla) |
+| `Unexpected token` after a comparison | invalid operator (`>=`/`<=`, or `=` on `date`) before the reported token; a variable RHS is valid |
 | `Malformed token: width/height` | wrong `size` keys in `buttonType`/`listboxType` — use `{ x y }` |
 | `Tried to get dynamic token that does not exist` | localisation key/file not loaded (BOM/header/language/missing scripted-loc entry) |
 | `Unexpected token` at `.txt` line 1 | UTF-8 BOM in a `.txt` file |
@@ -54,6 +56,7 @@ Workflow and quick-reference for debugging broken mods.
 | `common/national_focus` | characters/ideas/scripted_localisation/`ai_strategy_plans` reference focus IDs → `invalid focus`, `has_completed_focus` | keep vanilla focus IDs, or replace/stub every consumer; a blank tree + `load_focus_tree` hides gameplay without deleting IDs |
 | `events` | on_actions/decisions/focuses reference event IDs → `Malformed token`, `non-existent event` | stub every referenced event (`hidden = yes`, `trigger = { always = no }`) or replace the consumers |
 | `common/decisions` | focuses/ideas/AI/scripted_triggers reference decision IDs | stub decisions and categories with `allowed = { always = no }` / `visible = { always = no }` |
+| `common/technologies` | vanilla doctrines/raids/AI/equipment reference tech IDs → `Invalid tech`, `invalid database object`, `Invalid token for tech_effect` | don't empty; keep vanilla or replace with a full tech tree and all consumers |
 | `common/country_tags` | duplicate tags, missing history/flags, broken `country_tag_aliases` references | generate an empty country for every uncovered tag; preserve aliases; add a `dynamic_tags = yes` block with enough tags |
 | `common/ai_strategy` | references removed vanilla ideas/characters → `has_idea` spam | replace it too, or keep vanilla and tolerate the references |
 | `common/on_actions` | vanilla hooks disappear; vanilla events/effects that expect them stop | usually keep vanilla (additions append); if replaced, port every hook you rely on |
@@ -69,6 +72,7 @@ Prefer file-level same-name overrides when changing only a few entries. `replace
 - **Characters**: `recruit_character` after `set_politics` or as the last line → [[hoi4-character]]
 - **States/map**: non-sequential state IDs; missing `buildings.txt`/`supply_nodes.txt`/`railways.txt` entries; wrong BMP depth → [[hoi4-map]]
 - **Script**: effect scope used as a target; trigger/effect scope mix-ups → [[hoi4-script]]
+- **Performance**: `on_daily`/`on_weekly`/`on_monthly` fire per country; global scans need a `global.num_days` guard, and monthly `every_state` work should be gated by dirty/version variables → [[hoi4-onaction]], [[hoi4-script]]
 - **Localisation**: missing `l_english:`, spaces in keys, raw newlines, missing closing quote → [[hoi4-assets]]
 
 ## Useful Tools

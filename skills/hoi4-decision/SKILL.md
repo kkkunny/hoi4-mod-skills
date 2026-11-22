@@ -58,6 +58,7 @@ Both `visible` and `available` must be true for a decision to be clickable.
 ## Fatal Pitfalls
 
 - **`allowed` used for dynamic conditions** → checks once at load, never updates
+- **Category block inside `common/decisions/*.txt`** → `Unknown category`; define it in `common/decisions/categories/*.txt`
 - **`visible` used to gate missions** → ignored; use `activation`
 - **Non-numeric cost** → decision fails to load
 - **Expecting a state-targeted decision to keep the decision panel open** → the map click leaves the view; use a state-panel scripted GUI

@@ -41,6 +41,9 @@ Selection patterns: `every_` runs on each match in order; `random_` picks one; `
 
 - Blocks are **AND by default**; use `OR = { ... }`, `NOT = { ... }`, `if`/`else` for logic.
 - `=` means **exact equality**, not "at least". Use `>` / `<`.
+- Shorthand comparisons are only `=`, `>`, `<`. `>=`/`<=` do not parse (the error may point at the right-hand token); use `compare = greater_than_or_equals` / `less_than_or_equals`, or negate (`NOT = { x < n }`). `date` also accepts only `<`/`>`; "on or after D" is `NOT = { date < D }`.
+- `check_variable`'s right side may be a literal or a variable path (`var:`, `temp_var:`, `THIS.`, `PREV.`, `ROOT.`, `FROM.`); a valid RHS is not the bug.
+- `has_variable` does not see arrays (including `array^num` / `array^N`). Test `check_variable = { array^num = N }`; a missing array's `^num` reads 0.
 - Tooltips: `custom_trigger_tooltip = loc_key`.
 - Complete trigger list: `Triggers.md`. In-game docs: `../hoi4/Hearts of Iron IV/documentation/triggers_documentation.*`.
 
@@ -63,6 +66,9 @@ Selection patterns: `every_` runs on each match in order; `random_` picks one; `
 
 - Effect scope used as a target / mix of effect and trigger scopes → errors
 - `=` treated as "≥" → wrong logic
+- `>=` / `<=` in shorthand → parse error, often reported on the next token; `date` rejects `=` too
+- `has_variable` on an array → false; use `array^num`
+- `Unexpected token` on a `check_variable` RHS → check for `>=`/`<=` before rewriting the RHS
 - `check_variable = { x != 0 }` is not valid short syntax → use `NOT = { check_variable = { x = 0 } }` or `compare = not_equals`
 - One named scripted effect per state for 1000+ states → file/load bloat; use `every_state` + a global array keyed by `THIS.id`
 - State events have ambiguous country/state scope → prefer country events + targets
